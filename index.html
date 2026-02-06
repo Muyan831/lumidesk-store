@@ -12,8 +12,8 @@
             --bg: #ffffff;
             --text: #1d1d1f;
             --text-muted: #86868b;
-            --accent-yellow: #FFD60A; /* 你的品牌黄 */
-            --accent-orange: #f39c12; /* 辅助橙色 (用于新品悬停) */
+            --accent-yellow: #FFD60A; 
+            --accent-orange: #f39c12; 
             --glass: rgba(255, 255, 255, 0.72);
             --radius-lg: 28px;
             --radius-md: 18px;
@@ -23,14 +23,13 @@
 
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
-        a { text-decoration: none; }
+        a { text-decoration: none; cursor: pointer; }
         
-        /* 通用工具类 */
         .container-centered { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         .section-title-large { font-size: 32px; font-weight: 700; margin: 0 0 30px 0; letter-spacing: -0.5px; color: var(--text); }
 
         /* =========================================
-           1. Top Nav (客服+购物袋图标)
+           1. Top Nav
            ========================================= */
         nav {
             position: fixed; top: 0; width: 100%; height: 52px;
@@ -41,43 +40,35 @@
         .nav-content {
             max-width: 1024px; margin: 0 auto; height: 100%;
             display: flex; align-items: center; justify-content: space-between; padding: 0 22px;
+            position: relative;
         }
 
-        .nav-logo { height: 24px; width: 24px; display: flex; align-items: center; cursor: pointer; }
-        .nav-logo img { height: 100%; width: 100%; object-fit: contain; }
-
-        .nav-menu { display: flex; gap: 34px; position: absolute; left: 50%; transform: translateX(-50%); }
+        .nav-menu { 
+            display: flex; gap: 34px; 
+            position: absolute; left: 50%; transform: translateX(-50%); 
+        }
         .nav-menu a {
             font-size: 13px; font-weight: 500; letter-spacing: .02em;
             text-decoration: none; color: var(--text); opacity: 0.8; transition: opacity 0.3s ease;
         }
         .nav-menu a:hover { opacity: 1; }
 
-        .nav-right { display: flex; align-items: center; gap: 16px; }
-        .icon-btn { 
-            width: 20px; height: 20px; opacity: 0.7; cursor: pointer; 
-            transition: all 0.3s; color: var(--text); 
-        }
+        .nav-right { margin-left: auto; display: flex; align-items: center; gap: 20px; }
+        .icon-btn { width: 20px; height: 20px; opacity: 0.7; cursor: pointer; transition: all 0.3s; color: var(--text); display: block; }
         .icon-btn:hover { opacity: 1; transform: scale(1.1); }
-        .cart-dot { font-size: 10px; font-weight: 700; margin-left: 2px; }
+        
+        .bag-btn-group { display: flex; align-items: center; gap: 4px; cursor: pointer; opacity: 0.7; transition: 0.3s; }
+        .bag-btn-group:hover { opacity: 1; transform: scale(1.05); }
+        .cart-dot { font-size: 11px; font-weight: 700; color: var(--text); }
 
         /* =========================================
-           2. Hero Section (保留原有的文字 Hero)
+           2. Hero Section
            ========================================= */
         .hero {
-            min-height: 100vh; /* 默认全屏 */
-            display: flex; flex-direction: column; align-items: center;
-            text-align: center; 
-            /* Noha: Adjust hero padding here */
-            padding: 140px 20px 60px;
-            transition: padding 0.5s ease, min-height 0.5s ease;
+            min-height: 100vh; display: flex; flex-direction: column; align-items: center; text-align: center; 
+            padding: 140px 20px 60px; transition: padding 0.5s ease, min-height 0.5s ease;
         }
-
-        /* --- Noha: Google Sites iframe 修复样式 (重要) --- */
-        body.embedded .hero {
-            min-height: auto; /* 移除强制全屏 */
-            padding: 92px 20px 40px; 
-        }
+        body.embedded .hero { min-height: auto; padding: 92px 20px 40px; }
 
         .hero-title {
             font-size: clamp(64px, 12vw, 110px); font-weight: 700; margin: 0; letter-spacing: -3px;
@@ -85,7 +76,6 @@
             background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
             animation: shimmer 6s infinite linear;
         }
-
         @keyframes shimmer { 0% { background-position: 150% center; } 100% { background-position: -50% center; } }
 
         .hero-desc { font-size: 19px; color: var(--text-muted); max-width: 550px; margin: 24px 0 42px; }
@@ -93,16 +83,11 @@
         .cta-btn {
             background: var(--text); color: white; padding: 14px 36px; border-radius: 40px;
             text-decoration: none; font-weight: 600; transition: var(--transition);
-            border: 1px solid transparent; 
-            /* Noha: Adjust CTA spacing here */
-            margin-bottom: 80px; 
+            border: 1px solid transparent; margin-bottom: 80px; 
         }
-        /* iframe 修复 */
         body.embedded .cta-btn { margin-bottom: 36px; }
-
         .cta-btn:hover { transform: scale(1.03); border-color: var(--accent-yellow); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
 
-        /* Feature Grid (保留) */
         .feature-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
             max-width: 1000px; width: 100%; margin-top: 20px;
@@ -116,7 +101,7 @@
         .feature-card p { font-size: 14px; color: var(--text-muted); margin: 0; line-height: 1.5; }
 
         /* =========================================
-           3. Promo Carousel (4 Slides)
+           3. Promo Carousel
            ========================================= */
         .promo-section { max-width: 1100px; margin: 60px auto 100px; padding: 0 24px; position: relative; }
         .carousel-viewport { 
@@ -142,21 +127,18 @@
         }
         .btn-prev { left: 20px; }
         .btn-next { right: 20px; }
-
         .indicators { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
         .dot { width: 6px; height: 6px; border-radius: 50%; background: #d2d2d7; transition: 0.3s; cursor: pointer; }
         .dot.active { width: 20px; border-radius: 3px; background: var(--text); }
 
         /* =========================================
-           4. Inspiration Masonry (拼图)
+           4. Inspiration Masonry
            ========================================= */
         .inspiration-section { margin: var(--section-spacing) auto; }
         .masonry-grid {
             display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 250px); gap: 16px;
         }
-        .masonry-item {
-            position: relative; overflow: hidden; border-radius: 16px; background: #f5f5f7;
-        }
+        .masonry-item { position: relative; overflow: hidden; border-radius: 16px; background: #f5f5f7; }
         .masonry-img {
             width: 100%; height: 100%; background-size: cover; background-position: center;
             transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -166,7 +148,7 @@
         .item-wide { grid-column: span 2; }
 
         /* =========================================
-           5. New Arrivals (缩小版)
+           5. New Arrivals
            ========================================= */
         .new-arrivals-section { margin: var(--section-spacing) auto; }
         .header-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
@@ -176,16 +158,16 @@
         .product-scroll {
             display: flex; gap: 20px; padding: 10px 5px;
             overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-            justify-content: center; /* 电脑居中 */
+            justify-content: center;
         }
         .product-scroll::-webkit-scrollbar { display: none; }
 
         .prod-item {
             background: white; border-radius: 20px; padding: 12px;
-            flex: 0 0 240px; height: 360px; /* 尺寸缩小 */
+            flex: 0 0 240px; height: 360px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             transition: all 0.4s; scroll-snap-align: center;
-            display: flex; flex-direction: column; color: inherit; position: relative;
+            display: flex; flex-direction: column; color: inherit; position: relative; cursor: pointer;
         }
         .prod-item:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
 
@@ -209,7 +191,6 @@
             font-size: 12px; font-weight: 600; transition: 0.3s;
         }
         .prod-item:hover .buy-btn-small { background: #1d1d1f; color: white; }
-
         .glass-tag {
             position: absolute; top: 10px; left: 10px; padding: 4px 10px;
             border-radius: 20px; background: rgba(255, 255, 255, 0.7);
@@ -217,9 +198,7 @@
             border: 1px solid rgba(255,255,255,0.5); z-index: 2;
         }
 
-        /* =========================================
-           6. Footer Elements
-           ========================================= */
+        /* Footer */
         .full-width-banner {
             width: 100%; height: 400px; margin: var(--section-spacing) 0;
             background-color: #ddd; background-size: cover; background-position: center;
@@ -249,25 +228,25 @@
 
 <nav>
     <div class="nav-content">
-        <a href="#" class="nav-logo" id="logoBtn">
-            <img src="logo.png" alt="Logo">
-        </a>
         <div class="nav-menu">
-            <a href="index.html">Home</a>
-            <a href="shop.html">Products</a>
-            <a href="about.html">About Us</a>
-            <a href="receipt.html">Receipt</a>
+            <a href="#" id="navHome">Home</a>
+            <a href="#" id="navProducts">Products</a>
+            <a href="#" id="navAbout">About Us</a>
+            <a href="#" id="navReceipt">Receipt</a>
         </div>
+
         <div class="nav-right">
             <svg class="icon-btn" id="kefuBtn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
             </svg>
-            <svg class="icon-btn" id="bagBtn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4Z"></path>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <path d="M16 10a4 4 0 01-8 0"></path>
-            </svg>
-            <span class="cart-dot" id="cartCount">0</span>
+            <div class="bag-btn-group" id="bagBtn">
+                <svg class="icon-btn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4Z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 01-8 0"></path>
+                </svg>
+                <span class="cart-dot" id="cartCount">0</span>
+            </div>
         </div>
     </div>
 </nav>
@@ -329,11 +308,11 @@
 <div class="container-centered new-arrivals-section">
     <div class="header-row">
         <h2 class="section-title-large">New Arrivals</h2>
-        <a href="shop.html" class="view-all">Shop all →</a>
+        <a href="#" class="view-all" id="viewAllBtn">Shop all →</a>
     </div>
 
     <div class="product-scroll">
-        <a href="shop.html" class="prod-item">
+        <div class="prod-item" onclick="goShopAdd('PRO_STAND_001')">
             <div class="glass-tag">NEW</div>
             <div class="img-container">
                 <div class="prod-img" style="background-image: url('https://images.unsplash.com/photo-1587614382346-4ec70e388b28?q=80&w=400');"></div>
@@ -341,9 +320,9 @@
             <div class="prod-cat">Laptop Stands</div>
             <h3 class="prod-title">Pro Stand</h3>
             <div class="prod-price">RM 89 </div>
-            <div class="buy-btn-small">Add</div>
-        </a>
-        <a href="shop.html" class="prod-item">
+            <div class="buy-btn-small">Go to Shop</div>
+        </div>
+        <div class="prod-item" onclick="goShopAdd('FOCUS_LAMP_001')">
             <div class="glass-tag">HOT</div>
             <div class="img-container">
                 <div class="prod-img" style="background-image: url('https://images.unsplash.com/photo-1534234828569-16d1d2d3e915?q=80&w=400');"></div>
@@ -351,18 +330,18 @@
             <div class="prod-cat">Desk Lamps</div>
             <h3 class="prod-title">Focus Lamp</h3>
             <div class="prod-price">RM 129 </div>
-            <div class="buy-btn-small">Add</div>
-        </a>
-        <a href="shop.html" class="prod-item">
+            <div class="buy-btn-small">Go to Shop</div>
+        </div>
+        <div class="prod-item" onclick="goShopAdd('DESK_SET_001')">
             <div class="img-container">
                 <div class="prod-img" style="background-image: url('https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?q=80&w=400');"></div>
             </div>
             <div class="prod-cat">Organizers</div>
             <h3 class="prod-title">Desk Set</h3>
             <div class="prod-price">RM 45 </div>
-            <div class="buy-btn-small">Add</div>
-        </a>
-        <a href="shop.html" class="prod-item">
+            <div class="buy-btn-small">Go to Shop</div>
+        </div>
+        <div class="prod-item" onclick="goShopAdd('TIDY_BOX_001')">
             <div class="glass-tag">NEW</div>
             <div class="img-container">
                 <div class="prod-img" style="background-image: url('https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=400');"></div>
@@ -370,8 +349,8 @@
             <div class="prod-cat">Cable Mgmt</div>
             <h3 class="prod-title">Tidy Box</h3>
             <div class="prod-price">RM 35 </div>
-            <div class="buy-btn-small">Add</div>
-        </a>
+            <div class="buy-btn-small">Go to Shop</div>
+        </div>
     </div>
 </div>
 
@@ -395,13 +374,38 @@
     const URLS = {
         HOME: 'index.html',
         PRODUCTS: 'shop.html',
-        ABOUT: 'https://sites.google.com/view/lumidesk/about',
+        ABOUT: 'https://sites.google.com/view/lumidesk/about', 
         RECEIPT: 'receipt.html',
         BAG: 'bag.html',
         KEFU: 'kefu.html'
     };
 
-    // --- Noha: Carousel Data ---
+    // --- Robust Navigation Function (Google Sites Safe) ---
+    function go(url) {
+        try { window.top.location.href = url; }
+        catch (e) { window.location.href = url; }
+    }
+
+    // --- New Arrivals Redirection (Pass ID to Shop) ---
+    function goShopAdd(productId) {
+        // Noha: Simply redirect to shop with ID parameter. 
+        // Logic to actually add to cart will be in shop.html later.
+        go(`shop.html?add=${encodeURIComponent(productId)}`);
+    }
+
+    // --- Event Listeners ---
+    document.getElementById('navHome').onclick = (e) => { e.preventDefault(); go(URLS.HOME); };
+    document.getElementById('navProducts').onclick = (e) => { e.preventDefault(); go(URLS.PRODUCTS); };
+    document.getElementById('navAbout').onclick = (e) => { e.preventDefault(); go(URLS.ABOUT); };
+    document.getElementById('navReceipt').onclick = (e) => { e.preventDefault(); go(URLS.RECEIPT); };
+    
+    document.getElementById('heroShopBtn').onclick = (e) => { e.preventDefault(); go(URLS.PRODUCTS); };
+    document.getElementById('viewAllBtn').onclick = (e) => { e.preventDefault(); go(URLS.PRODUCTS); };
+    
+    document.getElementById('kefuBtn').onclick = () => go(URLS.KEFU);
+    document.getElementById('bagBtn').onclick  = () => go(URLS.BAG);
+
+    // --- Carousel Data ---
     const PROMOS = [
         { title: "Winter Collection", subtitle: "Up to 20% off on premium walnut stands.", img: "https://picsum.photos/seed/promo1/1200/600" },
         { title: "New Year, New Desk", subtitle: "The limited Matte Black series is here.", img: "https://picsum.photos/seed/promo2/1200/600" },
@@ -409,13 +413,7 @@
         { title: "Organize Better", subtitle: "Discover our new artisan cable organizers.", img: "https://picsum.photos/seed/promo4/1200/600" }
     ];
 
-    // Nav Routing
-    document.getElementById('logoBtn').onclick = () => window.location.href = URLS.HOME;
-    document.getElementById('heroShopBtn').onclick = () => window.location.href = URLS.PRODUCTS;
-    document.getElementById('kefuBtn').onclick = () => window.location.href = URLS.KEFU;
-    document.getElementById('bagBtn').onclick  = () => window.location.href = URLS.BAG;
-
-    // Carousel Logic
+    // --- Carousel Logic ---
     const track = document.getElementById('track');
     const indicatorWrap = document.getElementById('indicators');
     let currentSlide = 0;
@@ -430,7 +428,7 @@
                 <div class="slide-content">
                     <h2>${promo.title}</h2>
                     <p>${promo.subtitle}</p>
-                    <a href="#" class="cta-btn" style="padding:10px 24px; font-size:13px;">Explore Now</a>
+                    <a href="#" class="cta-btn" style="padding:10px 24px; font-size:13px;" onclick="event.preventDefault(); go(URLS.PRODUCTS);">Explore Now</a>
                 </div>
             `;
             track.appendChild(slide);
@@ -439,6 +437,9 @@
             dot.onclick = () => goToSlide(idx);
             indicatorWrap.appendChild(dot);
         });
+        
+        // Noha: Force go to slide 0 to prevent flicker
+        goToSlide(0);
     }
 
     function goToSlide(idx) {
@@ -455,7 +456,7 @@
     setInterval(() => moveSlide(1), 6000); 
     initCarousel();
 
-    // Cart Count
+    // --- Cart Count ---
     const cart = JSON.parse(localStorage.getItem('lumi_cart') || '[]');
     document.getElementById('cartCount').innerText = cart.reduce((s, i) => s + i.qty, 0);
 </script>
