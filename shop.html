@@ -1,0 +1,68 @@
+<script>
+  // ✅ 1) 商品数据库：以后你只维护这里（id/price/name/category）
+  const PRODUCTS = {
+    PRO_STAND_001: { id: "PRO_STAND_001", name: "Pro Stand", price: 89,  category: "Laptop Stands" },
+    FOCUS_LAMP_001:{ id: "FOCUS_LAMP_001", name: "Focus Lamp", price: 129, category: "Desk Lamps" },
+    DESK_SET_001:  { id: "DESK_SET_001", name: "Desk Set", price: 45,  category: "Organizers" },
+    TIDY_BOX_001:  { id: "TIDY_BOX_001", name: "Tidy Box", price: 35,  category: "Cable Mgmt" }
+  };
+
+  // ✅ 2) 购物车读写
+  function readCart(){
+    try { return JSON.parse(localStorage.getItem("lumi_cart") || "[]"); }
+    catch(e){ return []; }
+  }
+
+  function saveCart(cart){
+    localStorage.setItem("lumi_cart", JSON.stringify(cart));
+  }
+
+  function addToCart(productId, qty=1){
+    const product = PRODUCTS[productId];
+    if(!product) return false;
+
+    const cart = readCart();
+    const found = cart.find(i => i.id === productId);
+
+    if(found) found.qty += qty;
+    else cart.push({ id: productId, qty });
+
+    saveCart(cart);
+    return true;
+  }
+
+  // ✅ 3) 读取 URL ?add=xxx
+  function getParam(name){
+    const url = new URL(window.location.href);
+    return url.searchParams.get(name);
+  }
+
+  // ✅ 4) 可选：防止刷新重复加 —— 加完就把 ?add= 移除
+  function clearAddParam(){
+    const url = new URL(window.location.href);
+    url.searchParams.delete("add");
+    window.history.replaceState({}, "", url.toString());
+  }
+
+  // ✅ 5) 页面加载时自动加入
+  window.addEventListener("DOMContentLoaded", () => {
+    const pid = getParam("add");
+    if(pid){
+      const ok = addToCart(pid, 1);
+      if(ok){
+        // 可选提示
+        // alert("Added to cart: " + pid);
+        clearAddParam();
+      } else {
+        // alert("Product not found: " + pid);
+        clearAddParam();
+      }
+    }
+
+    // ✅ 如果你 shop 页也有 cartCount，就在这里同步
+    const cart = readCart();
+    const count = cart.reduce((s,i)=> s + (i.qty||0), 0);
+    const el = document.getElementById("cartCount");
+    if(el) el.innerText = count;
+  });
+</script>
