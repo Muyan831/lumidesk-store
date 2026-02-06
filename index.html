@@ -5,35 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LumiDesk | Minimalism redefined</title>
     <style>
+        /* =========================================
+           🌟 全局基础设置
+           ========================================= */
         :root {
             --bg: #ffffff;
             --text: #1d1d1f;
             --text-muted: #86868b;
-            --accent-yellow: #FFD60A;
+            --accent-yellow: #FFD60A; /* 你的品牌黄 */
+            --accent-orange: #f39c12; /* 辅助橙色 (用于新品悬停) */
             --glass: rgba(255, 255, 255, 0.72);
             --radius-lg: 28px;
             --radius-md: 18px;
             --transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            --section-spacing: 80px;
         }
 
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-        body { margin: 0; font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+        a { text-decoration: none; }
+        
+        /* 通用工具类 */
+        .container-centered { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .section-title-large { font-size: 32px; font-weight: 700; margin: 0 0 30px 0; letter-spacing: -0.5px; color: var(--text); }
 
-        /* --- 1. Top Nav --- */
+        /* =========================================
+           1. Top Nav (客服+购物袋图标)
+           ========================================= */
         nav {
-            position: fixed;
-            top: 0; width: 100%; height: 44px;
-            background: var(--glass);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            z-index: 1000;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: fixed; top: 0; width: 100%; height: 52px;
+            background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
         .nav-content {
-            max-width: 1024px;
-            margin: 0 auto; height: 100%;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 22px;
+            max-width: 1024px; margin: 0 auto; height: 100%;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 22px;
         }
 
         .nav-logo { height: 24px; width: 24px; display: flex; align-items: center; cursor: pointer; }
@@ -41,20 +48,24 @@
 
         .nav-menu { display: flex; gap: 34px; position: absolute; left: 50%; transform: translateX(-50%); }
         .nav-menu a {
-            font-size: 12px; font-weight: 500; letter-spacing: .02em;
-            text-decoration: none; color: var(--text); opacity: 0.8;
-            transition: opacity 0.3s ease;
+            font-size: 13px; font-weight: 500; letter-spacing: .02em;
+            text-decoration: none; color: var(--text); opacity: 0.8; transition: opacity 0.3s ease;
         }
         .nav-menu a:hover { opacity: 1; }
 
-        .nav-icons { display: flex; align-items: center; }
-        .nav-icon-btn { cursor: pointer; opacity: 0.8; transition: opacity 0.3s; display: flex; align-items: center; }
-        .nav-icon-btn:hover { opacity: 1; }
-        .cart-dot { font-size: 10px; font-weight: 700; margin-left: 4px; }
+        .nav-right { display: flex; align-items: center; gap: 16px; }
+        .icon-btn { 
+            width: 20px; height: 20px; opacity: 0.7; cursor: pointer; 
+            transition: all 0.3s; color: var(--text); 
+        }
+        .icon-btn:hover { opacity: 1; transform: scale(1.1); }
+        .cart-dot { font-size: 10px; font-weight: 700; margin-left: 2px; }
 
-        /* --- 2. Hero Section --- */
+        /* =========================================
+           2. Hero Section (保留原有的文字 Hero)
+           ========================================= */
         .hero {
-            min-height: 100vh; /* 独立打开时保持全屏 */
+            min-height: 100vh; /* 默认全屏 */
             display: flex; flex-direction: column; align-items: center;
             text-align: center; 
             /* Noha: Adjust hero padding here */
@@ -62,10 +73,9 @@
             transition: padding 0.5s ease, min-height 0.5s ease;
         }
 
-        /* --- Noha: 针对 Google Sites 嵌入环境的修复样式 --- */
+        /* --- Noha: Google Sites iframe 修复样式 (重要) --- */
         body.embedded .hero {
             min-height: auto; /* 移除强制全屏 */
-            /* Noha: Adjust hero padding for embedded view */
             padding: 92px 20px 40px; 
         }
 
@@ -87,15 +97,12 @@
             /* Noha: Adjust CTA spacing here */
             margin-bottom: 80px; 
         }
-
-        /* --- Noha: 针对嵌入环境缩小 CTA 间距 --- */
-        body.embedded .cta-btn {
-            margin-bottom: 36px;
-        }
+        /* iframe 修复 */
+        body.embedded .cta-btn { margin-bottom: 36px; }
 
         .cta-btn:hover { transform: scale(1.03); border-color: var(--accent-yellow); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
 
-        /* Feature Grid */
+        /* Feature Grid (保留) */
         .feature-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
             max-width: 1000px; width: 100%; margin-top: 20px;
@@ -108,7 +115,9 @@
         .feature-card h3 { font-size: 18px; margin: 0 0 10px; }
         .feature-card p { font-size: 14px; color: var(--text-muted); margin: 0; line-height: 1.5; }
 
-        /* --- 3. Promo Carousel (4 Slides) --- */
+        /* =========================================
+           3. Promo Carousel (4 Slides)
+           ========================================= */
         .promo-section { max-width: 1100px; margin: 60px auto 100px; padding: 0 24px; position: relative; }
         .carousel-viewport { 
             width: 100%; aspect-ratio: 21/9; border-radius: var(--radius-lg); 
@@ -138,11 +147,101 @@
         .dot { width: 6px; height: 6px; border-radius: 50%; background: #d2d2d7; transition: 0.3s; cursor: pointer; }
         .dot.active { width: 20px; border-radius: 3px; background: var(--text); }
 
+        /* =========================================
+           4. Inspiration Masonry (拼图)
+           ========================================= */
+        .inspiration-section { margin: var(--section-spacing) auto; }
+        .masonry-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 250px); gap: 16px;
+        }
+        .masonry-item {
+            position: relative; overflow: hidden; border-radius: 16px; background: #f5f5f7;
+        }
+        .masonry-img {
+            width: 100%; height: 100%; background-size: cover; background-position: center;
+            transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .masonry-item:hover .masonry-img { transform: scale(1.05); }
+        .item-large { grid-column: span 2; grid-row: span 2; }
+        .item-wide { grid-column: span 2; }
+
+        /* =========================================
+           5. New Arrivals (缩小版)
+           ========================================= */
+        .new-arrivals-section { margin: var(--section-spacing) auto; }
+        .header-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
+        .view-all { font-size: 13px; color: #86868b; transition: 0.3s; }
+        .view-all:hover { color: var(--accent-orange); }
+
+        .product-scroll {
+            display: flex; gap: 20px; padding: 10px 5px;
+            overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+            justify-content: center; /* 电脑居中 */
+        }
+        .product-scroll::-webkit-scrollbar { display: none; }
+
+        .prod-item {
+            background: white; border-radius: 20px; padding: 12px;
+            flex: 0 0 240px; height: 360px; /* 尺寸缩小 */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            transition: all 0.4s; scroll-snap-align: center;
+            display: flex; flex-direction: column; color: inherit; position: relative;
+        }
+        .prod-item:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+
+        .img-container {
+            height: 200px; width: 100%; border-radius: 14px; overflow: hidden;
+            margin-bottom: 12px; background-color: #faf9f6; position: relative;
+        }
+        .prod-img {
+            width: 100%; height: 100%; background-size: cover; background-position: center;
+            transition: transform 0.6s; mix-blend-mode: multiply;
+        }
+        .prod-item:hover .prod-img { transform: scale(1.08); }
+
+        .prod-title { font-size: 16px; font-weight: 600; margin: 0 0 4px 0; color: #1d1d1f; }
+        .prod-price { font-size: 14px; color: #666; }
+        .prod-cat { font-size: 11px; color: #999; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .buy-btn-small {
+            margin-top: auto; background: #f5f5f7; color: #1d1d1f;
+            text-align: center; padding: 10px; border-radius: 30px;
+            font-size: 12px; font-weight: 600; transition: 0.3s;
+        }
+        .prod-item:hover .buy-btn-small { background: #1d1d1f; color: white; }
+
+        .glass-tag {
+            position: absolute; top: 10px; left: 10px; padding: 4px 10px;
+            border-radius: 20px; background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(5px); font-size: 9px; font-weight: 800;
+            border: 1px solid rgba(255,255,255,0.5); z-index: 2;
+        }
+
+        /* =========================================
+           6. Footer Elements
+           ========================================= */
+        .full-width-banner {
+            width: 100%; height: 400px; margin: var(--section-spacing) 0;
+            background-color: #ddd; background-size: cover; background-position: center;
+        }
+        .newsletter-section {
+            background-color: #ed8a6b; padding: 60px 20px;
+            text-align: center; color: white;
+        }
+        .news-input { padding: 14px 24px; border-radius: 50px; border: 2px solid rgba(255,255,255,0.4); background: transparent; color: white; outline: none; }
+        .news-btn { padding: 14px 30px; border-radius: 50px; border: none; background: #2c3e50; color: white; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .news-btn:hover { background: #1a252f; transform: scale(1.05); }
+
         @media (max-width: 768px) {
             .nav-menu { display: none; }
             .feature-grid { grid-template-columns: 1fr; }
             .carousel-viewport { aspect-ratio: 16/10; }
             .slide { padding: 0 30px; }
+            .masonry-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 200px); }
+            .item-large { grid-column: span 2; grid-row: span 2; }
+            .item-wide { grid-column: span 2; }
+            .product-scroll { justify-content: flex-start; padding-left: 20px; }
+            .full-width-banner { height: 250px; }
         }
     </style>
 </head>
@@ -154,16 +253,21 @@
             <img src="logo.png" alt="Logo">
         </a>
         <div class="nav-menu">
-            <a href="#" id="link-home">Home</a>
-            <a href="#" id="link-products">Products</a>
-            <a href="#" id="link-about">About Us</a>
-            <a href="#" id="link-receipt">Receipt</a>
+            <a href="index.html">Home</a>
+            <a href="shop.html">Products</a>
+            <a href="about.html">About Us</a>
+            <a href="receipt.html">Receipt</a>
         </div>
-        <div class="nav-icons">
-            <div class="nav-icon-btn" id="bagBtn">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
-                <span class="cart-dot" id="cartCount">0</span>
-            </div>
+        <div class="nav-right">
+            <svg class="icon-btn" id="kefuBtn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+            </svg>
+            <svg class="icon-btn" id="bagBtn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4Z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 01-8 0"></path>
+            </svg>
+            <span class="cart-dot" id="cartCount">0</span>
         </div>
     </div>
 </nav>
@@ -198,6 +302,89 @@
     <div class="indicators" id="indicators"></div>
 </section>
 
+<div class="container-centered inspiration-section">
+    <h2 class="section-title-large">More ideas and inspiration</h2>
+    <div class="masonry-grid">
+        <div class="masonry-item item-large">
+            <div class="masonry-img" style="background-image: url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=800');"></div>
+        </div>
+        <div class="masonry-item">
+            <div class="masonry-img" style="background-image: url('https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?q=80&w=400');"></div>
+        </div>
+        <div class="masonry-item">
+            <div class="masonry-img" style="background-image: url('https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=400');"></div>
+        </div>
+        <div class="masonry-item item-wide">
+            <div class="masonry-img" style="background-image: url('https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=600');"></div>
+        </div>
+        <div class="masonry-item">
+            <div class="masonry-img" style="background-image: url('https://images.unsplash.com/photo-1595515106969-1ce29569ff95?q=80&w=400');"></div>
+        </div>
+        <div class="masonry-item">
+            <div class="masonry-img" style="background-image: url('https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=400');"></div>
+        </div>
+    </div>
+</div>
+
+<div class="container-centered new-arrivals-section">
+    <div class="header-row">
+        <h2 class="section-title-large">New Arrivals</h2>
+        <a href="shop.html" class="view-all">Shop all →</a>
+    </div>
+
+    <div class="product-scroll">
+        <a href="shop.html" class="prod-item">
+            <div class="glass-tag">NEW</div>
+            <div class="img-container">
+                <div class="prod-img" style="background-image: url('https://images.unsplash.com/photo-1587614382346-4ec70e388b28?q=80&w=400');"></div>
+            </div>
+            <div class="prod-cat">Laptop Stands</div>
+            <h3 class="prod-title">Pro Stand</h3>
+            <div class="prod-price">RM 89 </div>
+            <div class="buy-btn-small">Add</div>
+        </a>
+        <a href="shop.html" class="prod-item">
+            <div class="glass-tag">HOT</div>
+            <div class="img-container">
+                <div class="prod-img" style="background-image: url('https://images.unsplash.com/photo-1534234828569-16d1d2d3e915?q=80&w=400');"></div>
+            </div>
+            <div class="prod-cat">Desk Lamps</div>
+            <h3 class="prod-title">Focus Lamp</h3>
+            <div class="prod-price">RM 129 </div>
+            <div class="buy-btn-small">Add</div>
+        </a>
+        <a href="shop.html" class="prod-item">
+            <div class="img-container">
+                <div class="prod-img" style="background-image: url('https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?q=80&w=400');"></div>
+            </div>
+            <div class="prod-cat">Organizers</div>
+            <h3 class="prod-title">Desk Set</h3>
+            <div class="prod-price">RM 45 </div>
+            <div class="buy-btn-small">Add</div>
+        </a>
+        <a href="shop.html" class="prod-item">
+            <div class="glass-tag">NEW</div>
+            <div class="img-container">
+                <div class="prod-img" style="background-image: url('https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=400');"></div>
+            </div>
+            <div class="prod-cat">Cable Mgmt</div>
+            <h3 class="prod-title">Tidy Box</h3>
+            <div class="prod-price">RM 35 </div>
+            <div class="buy-btn-small">Add</div>
+        </a>
+    </div>
+</div>
+
+<div class="full-width-banner" style="background-image: url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1600');"></div>
+
+<div class="newsletter-section">
+    <h2 style="font-size:24px; margin-bottom:20px;">Be the first to know our latest deals!</h2>
+    <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+        <input type="text" class="news-input" placeholder="Enter your email">
+        <button class="news-btn">Subscribe</button>
+    </div>
+</div>
+
 <script>
     // --- Noha: Detect if embedded in Google Sites iframe ---
     if (window.self !== window.top) {
@@ -210,7 +397,8 @@
         PRODUCTS: 'shop.html',
         ABOUT: 'https://sites.google.com/view/lumidesk/about',
         RECEIPT: 'receipt.html',
-        BAG: 'bag.html'
+        BAG: 'bag.html',
+        KEFU: 'kefu.html'
     };
 
     // --- Noha: Carousel Data ---
@@ -221,14 +409,13 @@
         { title: "Organize Better", subtitle: "Discover our new artisan cable organizers.", img: "https://picsum.photos/seed/promo4/1200/600" }
     ];
 
+    // Nav Routing
     document.getElementById('logoBtn').onclick = () => window.location.href = URLS.HOME;
-    document.getElementById('link-home').onclick = () => window.location.href = URLS.HOME;
-    document.getElementById('link-products').onclick = () => window.location.href = URLS.PRODUCTS;
     document.getElementById('heroShopBtn').onclick = () => window.location.href = URLS.PRODUCTS;
-    document.getElementById('link-about').onclick = () => window.location.href = URLS.ABOUT;
-    document.getElementById('link-receipt').onclick = () => window.location.href = URLS.RECEIPT;
-    document.getElementById('bagBtn').onclick = () => window.location.href = URLS.BAG;
+    document.getElementById('kefuBtn').onclick = () => window.location.href = URLS.KEFU;
+    document.getElementById('bagBtn').onclick  = () => window.location.href = URLS.BAG;
 
+    // Carousel Logic
     const track = document.getElementById('track');
     const indicatorWrap = document.getElementById('indicators');
     let currentSlide = 0;
@@ -268,6 +455,7 @@
     setInterval(() => moveSlide(1), 6000); 
     initCarousel();
 
+    // Cart Count
     const cart = JSON.parse(localStorage.getItem('lumi_cart') || '[]');
     document.getElementById('cartCount').innerText = cart.reduce((s, i) => s + i.qty, 0);
 </script>
