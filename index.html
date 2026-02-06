@@ -19,7 +19,7 @@
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         body { margin: 0; font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        /* --- 1. Apple-Style Top Nav (No Search) --- */
+        /* --- 1. Top Nav --- */
         nav {
             position: fixed;
             top: 0; width: 100%; height: 44px;
@@ -36,11 +36,9 @@
             padding: 0 22px;
         }
 
-        /* Left: Logo */
         .nav-logo { height: 24px; width: 24px; display: flex; align-items: center; cursor: pointer; }
         .nav-logo img { height: 100%; width: 100%; object-fit: contain; }
 
-        /* Center: Menu */
         .nav-menu { display: flex; gap: 34px; position: absolute; left: 50%; transform: translateX(-50%); }
         .nav-menu a {
             font-size: 12px; font-weight: 500; letter-spacing: .02em;
@@ -49,7 +47,6 @@
         }
         .nav-menu a:hover { opacity: 1; }
 
-        /* Right: Icons (Search Removed) */
         .nav-icons { display: flex; align-items: center; }
         .nav-icon-btn { cursor: pointer; opacity: 0.8; transition: opacity 0.3s; display: flex; align-items: center; }
         .nav-icon-btn:hover { opacity: 1; }
@@ -57,9 +54,19 @@
 
         /* --- 2. Hero Section --- */
         .hero {
-            min-height: 100vh;
+            min-height: 100vh; /* 独立打开时保持全屏 */
             display: flex; flex-direction: column; align-items: center;
-            text-align: center; padding: 140px 20px 60px;
+            text-align: center; 
+            /* Noha: Adjust hero padding here */
+            padding: 140px 20px 60px;
+            transition: padding 0.5s ease, min-height 0.5s ease;
+        }
+
+        /* --- Noha: 针对 Google Sites 嵌入环境的修复样式 --- */
+        body.embedded .hero {
+            min-height: auto; /* 移除强制全屏 */
+            /* Noha: Adjust hero padding for embedded view */
+            padding: 92px 20px 40px; 
         }
 
         .hero-title {
@@ -76,8 +83,16 @@
         .cta-btn {
             background: var(--text); color: white; padding: 14px 36px; border-radius: 40px;
             text-decoration: none; font-weight: 600; transition: var(--transition);
-            border: 1px solid transparent; margin-bottom: 80px;
+            border: 1px solid transparent; 
+            /* Noha: Adjust CTA spacing here */
+            margin-bottom: 80px; 
         }
+
+        /* --- Noha: 针对嵌入环境缩小 CTA 间距 --- */
+        body.embedded .cta-btn {
+            margin-bottom: 36px;
+        }
+
         .cta-btn:hover { transform: scale(1.03); border-color: var(--accent-yellow); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
 
         /* Feature Grid */
@@ -131,21 +146,19 @@
         }
     </style>
 </head>
-<body>
+<body id="mainBody">
 
 <nav>
     <div class="nav-content">
         <a href="#" class="nav-logo" id="logoBtn">
             <img src="logo.png" alt="Logo">
         </a>
-
         <div class="nav-menu">
             <a href="#" id="link-home">Home</a>
             <a href="#" id="link-products">Products</a>
             <a href="#" id="link-about">About Us</a>
             <a href="#" id="link-receipt">Receipt</a>
         </div>
-
         <div class="nav-icons">
             <div class="nav-icon-btn" id="bagBtn">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
@@ -178,8 +191,7 @@
 
 <section class="promo-section">
     <div class="carousel-viewport">
-        <div class="carousel-track" id="track">
-            </div>
+        <div class="carousel-track" id="track"></div>
         <button class="carousel-btn btn-prev" onclick="moveSlide(-1)">&#10094;</button>
         <button class="carousel-btn btn-next" onclick="moveSlide(1)">&#10095;</button>
     </div>
@@ -187,9 +199,13 @@
 </section>
 
 <script>
+    // --- Noha: Detect if embedded in Google Sites iframe ---
+    if (window.self !== window.top) {
+        document.getElementById('mainBody').classList.add('embedded');
+    }
+
     // --- Noha: URL Configuration Center ---
     const URLS = {
-        // // Noha: Update URL here
         HOME: 'index.html',
         PRODUCTS: 'shop.html',
         ABOUT: 'https://sites.google.com/view/lumidesk/about',
@@ -197,31 +213,14 @@
         BAG: 'bag.html'
     };
 
-    // --- Noha: Carousel Data (Expanded to 4 Slides) ---
+    // --- Noha: Carousel Data ---
     const PROMOS = [
-        {
-            title: "Winter Collection", // Noha: Change promo text 1
-            subtitle: "Up to 20% off on premium walnut stands.", 
-            img: "https://picsum.photos/seed/promo1/1200/600" // Noha: Replace image 1
-        },
-        {
-            title: "New Year, New Desk", // Noha: Change promo text 2
-            subtitle: "The limited Matte Black series is here.",
-            img: "https://picsum.photos/seed/promo2/1200/600" // Noha: Replace image 2
-        },
-        {
-            title: "Bundle & Save", // Noha: Change promo text 3
-            subtitle: "Save $50 when you buy the full setup.",
-            img: "https://picsum.photos/seed/promo3/1200/600" // Noha: Replace image 3
-        },
-        {
-            title: "Organize Better", // Noha: Change promo text 4
-            subtitle: "Discover our new artisan cable organizers.",
-            img: "https://picsum.photos/seed/promo4/1200/600" // Noha: Replace image 4
-        }
+        { title: "Winter Collection", subtitle: "Up to 20% off on premium walnut stands.", img: "https://picsum.photos/seed/promo1/1200/600" },
+        { title: "New Year, New Desk", subtitle: "The limited Matte Black series is here.", img: "https://picsum.photos/seed/promo2/1200/600" },
+        { title: "Bundle & Save", subtitle: "Save $50 when you buy the full setup.", img: "https://picsum.photos/seed/promo3/1200/600" },
+        { title: "Organize Better", subtitle: "Discover our new artisan cable organizers.", img: "https://picsum.photos/seed/promo4/1200/600" }
     ];
 
-    // Navigation Mapping
     document.getElementById('logoBtn').onclick = () => window.location.href = URLS.HOME;
     document.getElementById('link-home').onclick = () => window.location.href = URLS.HOME;
     document.getElementById('link-products').onclick = () => window.location.href = URLS.PRODUCTS;
@@ -230,7 +229,6 @@
     document.getElementById('link-receipt').onclick = () => window.location.href = URLS.RECEIPT;
     document.getElementById('bagBtn').onclick = () => window.location.href = URLS.BAG;
 
-    // Carousel Logic
     const track = document.getElementById('track');
     const indicatorWrap = document.getElementById('indicators');
     let currentSlide = 0;
@@ -240,7 +238,7 @@
             const slide = document.createElement('div');
             slide.className = 'slide';
             slide.innerHTML = `
-                <img src="${promo.img}" class="slide-img" alt="Promo Image">
+                <img src="${promo.img}" class="slide-img" alt="Promo">
                 <div class="slide-overlay"></div>
                 <div class="slide-content">
                     <h2>${promo.title}</h2>
@@ -249,7 +247,6 @@
                 </div>
             `;
             track.appendChild(slide);
-
             const dot = document.createElement('div');
             dot.className = `dot ${idx === 0 ? 'active' : ''}`;
             dot.onclick = () => goToSlide(idx);
@@ -268,12 +265,9 @@
         goToSlide(currentSlide);
     }
 
-    // Auto-slide every 6 seconds
     setInterval(() => moveSlide(1), 6000); 
-
     initCarousel();
 
-    // Sync Cart Count
     const cart = JSON.parse(localStorage.getItem('lumi_cart') || '[]');
     document.getElementById('cartCount').innerText = cart.reduce((s, i) => s + i.qty, 0);
 </script>
