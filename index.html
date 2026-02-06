@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LumiDesk | Minimalism redefined</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #1d1d1f;
+            --text-muted: #86868b;
+            --accent-yellow: #FFD60A;
+            --glass: rgba(255, 255, 255, 0.72);
+            --radius-lg: 28px;
+            --radius-md: 18px;
+            --transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { margin: 0; font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        /* --- 1. Apple-Style Top Nav (No Search) --- */
+        nav {
+            position: fixed;
+            top: 0; width: 100%; height: 44px;
+            background: var(--glass);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .nav-content {
+            max-width: 1024px;
+            margin: 0 auto; height: 100%;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 22px;
+        }
+
+        /* Left: Logo */
+        .nav-logo { height: 24px; width: 24px; display: flex; align-items: center; cursor: pointer; }
+        .nav-logo img { height: 100%; width: 100%; object-fit: contain; }
+
+        /* Center: Menu */
+        .nav-menu { display: flex; gap: 34px; position: absolute; left: 50%; transform: translateX(-50%); }
+        .nav-menu a {
+            font-size: 12px; font-weight: 500; letter-spacing: .02em;
+            text-decoration: none; color: var(--text); opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+        .nav-menu a:hover { opacity: 1; }
+
+        /* Right: Icons (Search Removed) */
+        .nav-icons { display: flex; align-items: center; }
+        .nav-icon-btn { cursor: pointer; opacity: 0.8; transition: opacity 0.3s; display: flex; align-items: center; }
+        .nav-icon-btn:hover { opacity: 1; }
+        .cart-dot { font-size: 10px; font-weight: 700; margin-left: 4px; }
+
+        /* --- 2. Hero Section --- */
+        .hero {
+            min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center; padding: 140px 20px 60px;
+        }
+
+        .hero-title {
+            font-size: clamp(64px, 12vw, 110px); font-weight: 700; margin: 0; letter-spacing: -3px;
+            background: linear-gradient(100deg, #1d1d1f 35%, var(--accent-yellow) 50%, #1d1d1f 65%);
+            background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shimmer 6s infinite linear;
+        }
+
+        @keyframes shimmer { 0% { background-position: 150% center; } 100% { background-position: -50% center; } }
+
+        .hero-desc { font-size: 19px; color: var(--text-muted); max-width: 550px; margin: 24px 0 42px; }
+
+        .cta-btn {
+            background: var(--text); color: white; padding: 14px 36px; border-radius: 40px;
+            text-decoration: none; font-weight: 600; transition: var(--transition);
+            border: 1px solid transparent; margin-bottom: 80px;
+        }
+        .cta-btn:hover { transform: scale(1.03); border-color: var(--accent-yellow); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+            max-width: 1000px; width: 100%; margin-top: 20px;
+        }
+        .feature-card {
+            background: #fbfbfd; padding: 30px; border-radius: var(--radius-md);
+            text-align: left; transition: var(--transition); border: 1px solid rgba(0,0,0,0.02);
+        }
+        .feature-card:hover { transform: translateY(-5px); background: #fff; box-shadow: 0 20px 40px rgba(0,0,0,0.04); border-color: var(--accent-yellow); }
+        .feature-card h3 { font-size: 18px; margin: 0 0 10px; }
+        .feature-card p { font-size: 14px; color: var(--text-muted); margin: 0; line-height: 1.5; }
+
+        /* --- 3. Promo Carousel (4 Slides) --- */
+        .promo-section { max-width: 1100px; margin: 60px auto 100px; padding: 0 24px; position: relative; }
+        .carousel-viewport { 
+            width: 100%; aspect-ratio: 21/9; border-radius: var(--radius-lg); 
+            overflow: hidden; position: relative; background: #f5f5f7;
+        }
+        .carousel-track { display: flex; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1); }
+        .slide { 
+            min-width: 100%; height: 100%; position: relative; 
+            display: flex; align-items: center; padding: 0 60px; color: white;
+        }
+        .slide-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+        .slide-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(90deg, rgba(0,0,0,0.5) 0%, transparent 70%); z-index: 1; }
+        .slide-content { position: relative; z-index: 2; max-width: 400px; }
+        .slide-content h2 { font-size: 32px; margin: 0 0 10px; }
+        .slide-content p { font-size: 16px; opacity: 0.9; margin: 0 0 24px; }
+        
+        .carousel-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px); border: none; color: white; cursor: pointer; z-index: 10;
+            transition: var(--transition); display: flex; align-items: center; justify-content: center;
+        }
+        .btn-prev { left: 20px; }
+        .btn-next { right: 20px; }
+
+        .indicators { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: #d2d2d7; transition: 0.3s; cursor: pointer; }
+        .dot.active { width: 20px; border-radius: 3px; background: var(--text); }
+
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .carousel-viewport { aspect-ratio: 16/10; }
+            .slide { padding: 0 30px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-content">
+        <a href="#" class="nav-logo" id="logoBtn">
+            <img src="logo.png" alt="Logo">
+        </a>
+
+        <div class="nav-menu">
+            <a href="#" id="link-home">Home</a>
+            <a href="#" id="link-products">Products</a>
+            <a href="#" id="link-about">About Us</a>
+            <a href="#" id="link-receipt">Receipt</a>
+        </div>
+
+        <div class="nav-icons">
+            <div class="nav-icon-btn" id="bagBtn">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+                <span class="cart-dot" id="cartCount">0</span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section class="hero">
+    <h1 class="hero-title">LumiDesk</h1>
+    <p class="hero-desc">Elevating your workspace with minimalist design and uncompromising organization tools.</p>
+    <a href="#" class="cta-btn" id="heroShopBtn">Shop Now</a>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h3>Minimal Setup</h3>
+            <p>Strip away the clutter and focus on what truly matters.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Cable Flow</h3>
+            <p>Smart routing solutions for a cleaner, safer workspace.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Calm Workspace</h3>
+            <p>Design elements that promote peace and productivity.</p>
+        </div>
+    </div>
+</section>
+
+<section class="promo-section">
+    <div class="carousel-viewport">
+        <div class="carousel-track" id="track">
+            </div>
+        <button class="carousel-btn btn-prev" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="carousel-btn btn-next" onclick="moveSlide(1)">&#10095;</button>
+    </div>
+    <div class="indicators" id="indicators"></div>
+</section>
+
+<script>
+    // --- Noha: URL Configuration Center ---
+    const URLS = {
+        // // Noha: Update URL here
+        HOME: 'index.html',
+        PRODUCTS: 'shop.html',
+        ABOUT: 'https://sites.google.com/view/lumidesk/about',
+        RECEIPT: 'receipt.html',
+        BAG: 'bag.html'
+    };
+
+    // --- Noha: Carousel Data (Expanded to 4 Slides) ---
+    const PROMOS = [
+        {
+            title: "Winter Collection", // Noha: Change promo text 1
+            subtitle: "Up to 20% off on premium walnut stands.", 
+            img: "https://picsum.photos/seed/promo1/1200/600" // Noha: Replace image 1
+        },
+        {
+            title: "New Year, New Desk", // Noha: Change promo text 2
+            subtitle: "The limited Matte Black series is here.",
+            img: "https://picsum.photos/seed/promo2/1200/600" // Noha: Replace image 2
+        },
+        {
+            title: "Bundle & Save", // Noha: Change promo text 3
+            subtitle: "Save $50 when you buy the full setup.",
+            img: "https://picsum.photos/seed/promo3/1200/600" // Noha: Replace image 3
+        },
+        {
+            title: "Organize Better", // Noha: Change promo text 4
+            subtitle: "Discover our new artisan cable organizers.",
+            img: "https://picsum.photos/seed/promo4/1200/600" // Noha: Replace image 4
+        }
+    ];
+
+    // Navigation Mapping
+    document.getElementById('logoBtn').onclick = () => window.location.href = URLS.HOME;
+    document.getElementById('link-home').onclick = () => window.location.href = URLS.HOME;
+    document.getElementById('link-products').onclick = () => window.location.href = URLS.PRODUCTS;
+    document.getElementById('heroShopBtn').onclick = () => window.location.href = URLS.PRODUCTS;
+    document.getElementById('link-about').onclick = () => window.location.href = URLS.ABOUT;
+    document.getElementById('link-receipt').onclick = () => window.location.href = URLS.RECEIPT;
+    document.getElementById('bagBtn').onclick = () => window.location.href = URLS.BAG;
+
+    // Carousel Logic
+    const track = document.getElementById('track');
+    const indicatorWrap = document.getElementById('indicators');
+    let currentSlide = 0;
+
+    function initCarousel() {
+        PROMOS.forEach((promo, idx) => {
+            const slide = document.createElement('div');
+            slide.className = 'slide';
+            slide.innerHTML = `
+                <img src="${promo.img}" class="slide-img" alt="Promo Image">
+                <div class="slide-overlay"></div>
+                <div class="slide-content">
+                    <h2>${promo.title}</h2>
+                    <p>${promo.subtitle}</p>
+                    <a href="#" class="cta-btn" style="padding:10px 24px; font-size:13px;">Explore Now</a>
+                </div>
+            `;
+            track.appendChild(slide);
+
+            const dot = document.createElement('div');
+            dot.className = `dot ${idx === 0 ? 'active' : ''}`;
+            dot.onclick = () => goToSlide(idx);
+            indicatorWrap.appendChild(dot);
+        });
+    }
+
+    function goToSlide(idx) {
+        currentSlide = idx;
+        track.style.transform = `translateX(-${idx * 100}%)`;
+        document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+
+    function moveSlide(delta) {
+        currentSlide = (currentSlide + delta + PROMOS.length) % PROMOS.length;
+        goToSlide(currentSlide);
+    }
+
+    // Auto-slide every 6 seconds
+    setInterval(() => moveSlide(1), 6000); 
+
+    initCarousel();
+
+    // Sync Cart Count
+    const cart = JSON.parse(localStorage.getItem('lumi_cart') || '[]');
+    document.getElementById('cartCount').innerText = cart.reduce((s, i) => s + i.qty, 0);
+</script>
+
+</body>
+</html>
