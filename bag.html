@@ -17,7 +17,7 @@
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; background: var(--bg); color: var(--text); }
         
-        /* Nav (保持和首页一致) */
+        /* Nav */
         nav {
             position: fixed; top: 0; width: 100%; height: 52px;
             background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -25,33 +25,60 @@
         }
         .nav-link { color: var(--text); text-decoration: none; font-size: 13px; font-weight: 500; cursor: pointer; }
 
-        /* 购物车容器 */
+        /* Container */
         .container { max-width: 800px; margin: 100px auto; padding: 0 24px; }
         h1 { font-size: 40px; font-weight: 700; margin-bottom: 40px; }
 
-        /* 商品列表 */
-        .cart-item {
-            display: flex; align-items: center; padding: 24px 0; border-bottom: 1px solid var(--border);
-        }
+        /* Cart List */
+        .cart-item { display: flex; align-items: center; padding: 24px 0; border-bottom: 1px solid var(--border); }
         .item-img { width: 80px; height: 80px; border-radius: 12px; background: var(--bg-secondary); object-fit: cover; margin-right: 20px; }
         .item-info { flex: 1; }
         .item-name { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
         .item-price { color: var(--text-muted); font-size: 15px; }
         .item-controls { display: flex; align-items: center; gap: 15px; margin-top: 8px; }
-        .qty-btn { 
-            width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--border); 
-            background: transparent; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center;
-        }
+        .qty-btn { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; }
         
-        /* 底部结算栏 */
+        /* Summary */
         .summary-section { margin-top: 40px; text-align: right; }
         .total-row { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
-        .checkout-btn {
-            background: var(--text); color: white; padding: 16px 40px; border-radius: 40px;
-            font-size: 16px; font-weight: 600; border: none; cursor: pointer; transition: 0.3s;
-        }
+        .checkout-btn { background: var(--text); color: white; padding: 16px 40px; border-radius: 40px; font-size: 16px; font-weight: 600; border: none; cursor: pointer; transition: 0.3s; }
         .checkout-btn:hover { transform: scale(1.02); background: #000; }
         .empty-msg { text-align: center; color: var(--text-muted); margin-top: 60px; font-size: 18px; }
+
+        /* =========================================
+           🚀 嵌入式弹窗 (Modal) 样式
+           ========================================= */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px);
+            z-index: 2000; display: none; /* 默认隐藏 */
+            justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+
+        .modal-card {
+            background: white; width: 90%; max-width: 640px; height: 85vh;
+            border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden; position: relative; display: flex; flex-direction: column;
+            transform: scale(0.95); transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-card { transform: scale(1); }
+
+        .modal-header {
+            padding: 15px 20px; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255,255,255,0.9);
+        }
+        .modal-title { font-weight: 600; font-size: 16px; }
+        .close-btn {
+            background: #e5e5e5; border: none; width: 30px; height: 30px; border-radius: 50%;
+            cursor: pointer; font-weight: bold; color: #555; font-size: 18px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        /* 嵌入的 Google Form */
+        iframe { width: 100%; height: 100%; border: none; background: #fafafa; }
     </style>
 </head>
 <body>
@@ -66,28 +93,37 @@
     
     <div class="summary-section" id="summarySection" style="display:none;">
         <div class="total-row">Total: RM <span id="finalTotal">0.00</span></div>
-        <button class="checkout-btn" onclick="openCheckoutForm()">Proceed to Checkout</button>
+        <button class="checkout-btn" onclick="openModal()">Proceed to Checkout</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="checkoutModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <span class="modal-title">Secure Checkout</span>
+            <button class="close-btn" onclick="closeModal()">×</button>
+        </div>
+        <iframe id="formFrame" src=""></iframe>
     </div>
 </div>
 
 <script>
-   // ============================================================
-    // ⚠️ NOHA 配置区：已更新为你真实的 Google Form 信息
+    // ============================================================
+    // ⚠️ NOHA 配置区：请更新你新表单的 ID
     // ============================================================
     const FORM_CONFIG = {
-        // 1. 你的表单链接
+        // 你的表单链接 (记得去掉 viewform 及其后面的参数)
         baseUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc2o2D5bsn-nlNTCTFtcr6Pc4UGMHT5QXqG8xjvGJ6HbzveDw/viewform",
 
-        // 2. 你的题目 ID (从你的链接里提取出来的)
+        // 你的 Entry IDs (请填入你新获取的)
         fields: {
-            orderId:    "entry.1494565784", // 对应 Order ID (111)
-            items:      "entry.866891029",  // 对应 Cart Items (222)
-            total:      "entry.514552742",  // 对应 Total Amount (333)
+            orderId:    "entry.1494565784", // Order ID
+            items:      "entry.866891029",  // Cart Items
+            total:      "entry.514552742",  // Total Amount
         }
     };
 
     // --- 核心功能 ---
-
     function loadCart() {
         const cart = JSON.parse(localStorage.getItem('lumi_cart') || '[]');
         const list = document.getElementById('cartList');
@@ -103,7 +139,6 @@
         list.innerHTML = cart.map(item => {
             const lineTotal = item.price * item.qty;
             total += lineTotal;
-            // 处理图片：如果是本地图片路径，这里直接用；如果是占位符，也能用
             const imgSrc = item.img || 'https://via.placeholder.com/150'; 
             
             return `
@@ -138,48 +173,46 @@
         }
     }
 
-    // --- 🚀 Checkout 核心逻辑 (导入 Google Form) ---
-    function openCheckoutForm() {
+    // --- 🚀 弹窗逻辑 ---
+    function openModal() {
         const cart = JSON.parse(localStorage.getItem('lumi_cart') || '[]');
         if (cart.length === 0) return;
 
-        // 1. 生成订单号 (例如: LD-20260217-X8K2)
+        // 1. 准备数据
         const dateStr = new Date().toISOString().slice(0,10).replace(/-/g, "");
         const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
         const orderId = `LD-${dateStr}-${randomSuffix}`;
-
-        // 2. 计算总价
         const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0).toFixed(2);
+        const cartString = cart.map(i => `${i.name} (x${i.qty})`).join("\n"); // Google Form 段落换行用
 
-        // 3. 简化版购物车字符串 (防止 URL 过长)
-        // 格式: "Pro Stand (x1), Focus Lamp (x2)"
-        const cartString = cart.map(i => `${i.name} (x${i.qty})`).join(", ");
-
-        // 4. 保存 Order ID (为了给 Receipt 页面用，虽然目前还没接 API)
+        // 2. 保存到本地 (备用)
         localStorage.setItem('lumi_last_order', JSON.stringify({
-            id: orderId,
-            total: totalAmount,
-            items: cart,
-            date: new Date().toLocaleString()
+            id: orderId, total: totalAmount, items: cart, date: new Date().toLocaleString()
         }));
 
-        // 5. 拼装 Google Form URL
+        // 3. 拼接 URL
         const params = new URLSearchParams();
+        // 注意：这里加上 embedded=true 可以让 Google Form 去掉一些页眉，更适合嵌入
+        params.append("embedded", "true"); 
         params.append(FORM_CONFIG.fields.orderId, orderId);
-        params.append(FORM_CONFIG.fields.items, cartString); // 传简化版内容
+        params.append(FORM_CONFIG.fields.items, cartString);
         params.append(FORM_CONFIG.fields.total, totalAmount);
-        
-        // 如果你有 Name / Phone 字段，也可以在这里 append
-        // params.append(FORM_CONFIG.fields.customerName, "Guest"); 
 
         const finalUrl = `${FORM_CONFIG.baseUrl}?${params.toString()}`;
 
-        // 6. 跳转 (iframe 安全版)
-        try {
-            window.top.location.href = finalUrl;
-        } catch (e) {
-            window.location.href = finalUrl;
-        }
+        // 4. 加载到 iframe 并显示弹窗
+        document.getElementById('formFrame').src = finalUrl;
+        
+        const modal = document.getElementById('checkoutModal');
+        modal.classList.add('active');
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('checkoutModal');
+        modal.classList.remove('active');
+        // 可选：清空购物车（如果你希望提交后清空，可以在这里做，或者让用户手动清空）
+        // localStorage.removeItem('lumi_cart');
+        // loadCart();
     }
 
     function goBack() {
@@ -187,7 +220,6 @@
         catch (e) { window.location.href = 'index.html'; }
     }
 
-    // Init
     loadCart();
 </script>
 
