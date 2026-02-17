@@ -43,6 +43,7 @@
             position: relative;
         }
 
+        /* 菜单绝对居中 */
         .nav-menu { 
             display: flex; gap: 34px; 
             position: absolute; left: 50%; transform: translateX(-50%); 
@@ -68,6 +69,7 @@
             min-height: 100vh; display: flex; flex-direction: column; align-items: center; text-align: center; 
             padding: 140px 20px 60px; transition: padding 0.5s ease, min-height 0.5s ease;
         }
+        /* Google Sites iframe 修复 */
         body.embedded .hero { min-height: auto; padding: 92px 20px 40px; }
 
         .hero-title {
@@ -312,42 +314,42 @@
     </div>
 
     <div class="product-scroll">
-        <div class="prod-item" onclick="goShopAdd('PRO_STAND_001')">
+        <div class="prod-item" onclick="goShopAdd('ls1')">
             <div class="glass-tag">NEW</div>
             <div class="img-container">
                 <div class="prod-img" style="background-image: url('https://images.unsplash.com/photo-1587614382346-4ec70e388b28?q=80&w=400');"></div>
             </div>
             <div class="prod-cat">Laptop Stands</div>
-            <h3 class="prod-title">Pro Stand</h3>
-            <div class="prod-price">RM 89 </div>
+            <h3 class="prod-title">AluStand Pro</h3>
+            <div class="prod-price">RM 129 </div>
             <div class="buy-btn-small">Go to Shop</div>
         </div>
-        <div class="prod-item" onclick="goShopAdd('FOCUS_LAMP_001')">
+        <div class="prod-item" onclick="goShopAdd('dl1')">
             <div class="glass-tag">HOT</div>
             <div class="img-container">
                 <div class="prod-img" style="background-image: url('https://images.unsplash.com/photo-1534234828569-16d1d2d3e915?q=80&w=400');"></div>
             </div>
             <div class="prod-cat">Desk Lamps</div>
-            <h3 class="prod-title">Focus Lamp</h3>
-            <div class="prod-price">RM 129 </div>
+            <h3 class="prod-title">GlowBar Pro</h3>
+            <div class="prod-price">RM 159 </div>
             <div class="buy-btn-small">Go to Shop</div>
         </div>
-        <div class="prod-item" onclick="goShopAdd('DESK_SET_001')">
+        <div class="prod-item" onclick="goShopAdd('st1')">
             <div class="img-container">
                 <div class="prod-img" style="background-image: url('https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?q=80&w=400');"></div>
             </div>
-            <div class="prod-cat">Organizers</div>
-            <h3 class="prod-title">Desk Set</h3>
-            <div class="prod-price">RM 45 </div>
+            <div class="prod-cat">Storage</div>
+            <h3 class="prod-title">Zen Tray</h3>
+            <div class="prod-price">RM 65 </div>
             <div class="buy-btn-small">Go to Shop</div>
         </div>
-        <div class="prod-item" onclick="goShopAdd('TIDY_BOX_001')">
+        <div class="prod-item" onclick="goShopAdd('co1')">
             <div class="glass-tag">NEW</div>
             <div class="img-container">
                 <div class="prod-img" style="background-image: url('https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=400');"></div>
             </div>
-            <div class="prod-cat">Cable Mgmt</div>
-            <h3 class="prod-title">Tidy Box</h3>
+            <div class="prod-cat">Organizers</div>
+            <h3 class="prod-title">MagClip Box</h3>
             <div class="prod-price">RM 35 </div>
             <div class="buy-btn-small">Go to Shop</div>
         </div>
@@ -374,7 +376,7 @@
     const URLS = {
         HOME: 'index.html',
         PRODUCTS: 'shop.html',
-        ABOUT: 'https://sites.google.com/view/lumidesk/about', 
+        ABOUT: 'aboutus.html', 
         RECEIPT: 'receipt.html',
         BAG: 'bag.html',
         KEFU: 'kefu.html'

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Bag | LumiDesk</title>
+    <style>
+        /* =========================================
+           🌟 全局基础设置 (Apple Style)
+           ========================================= */
+        :root {
+            --bg: #ffffff; --text: #1d1d1f; --text-muted: #86868b;
+            --accent: #0071e3; --border: #d2d2d7; --bg-secondary: #f5f5f7;
+            --glass: rgba(255, 255, 255, 0.72);
+            --radius: 18px;
+        }
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; background: var(--bg); color: var(--text); }
+        
+        /* Nav (保持和首页一致) */
+        nav {
+            position: fixed; top: 0; width: 100%; height: 52px;
+            background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;
+        }
+        .nav-link { color: var(--text); text-decoration: none; font-size: 13px; font-weight: 500; cursor: pointer; }
+
+        /* 购物车容器 */
+        .container { max-width: 800px; margin: 100px auto; padding: 0 24px; }
+        h1 { font-size: 40px; font-weight: 700; margin-bottom: 40px; }
+
+        /* 商品列表 */
+        .cart-item {
+            display: flex; align-items: center; padding: 24px 0; border-bottom: 1px solid var(--border);
+        }
+        .item-img { width: 80px; height: 80px; border-radius: 12px; background: var(--bg-secondary); object-fit: cover; margin-right: 20px; }
+        .item-info { flex: 1; }
+        .item-name { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+        .item-price { color: var(--text-muted); font-size: 15px; }
+        .item-controls { display: flex; align-items: center; gap: 15px; margin-top: 8px; }
+        .qty-btn { 
+            width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--border); 
+            background: transparent; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        
+        /* 底部结算栏 */
+        .summary-section { margin-top: 40px; text-align: right; }
+        .total-row { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+        .checkout-btn {
+            background: var(--text); color: white; padding: 16px 40px; border-radius: 40px;
+            font-size: 16px; font-weight: 600; border: none; cursor: pointer; transition: 0.3s;
+        }
+        .checkout-btn:hover { transform: scale(1.02); background: #000; }
+        .empty-msg { text-align: center; color: var(--text-muted); margin-top: 60px; font-size: 18px; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a onclick="goBack()" class="nav-link">← Continue Shopping</a>
+</nav>
+
+<div class="container">
+    <h1>Review your bag.</h1>
+    <div id="cartList"></div>
+    
+    <div class="summary-section" id="summarySection" style="display:none;">
+        <div class="total-row">Total: RM <span id="finalTotal">0.00</span></div>
+        <button class="checkout-btn" onclick="openCheckoutForm()">Proceed to Checkout</button>
+    </div>
+</div>
+
+<script>
+   // ============================================================
+    // ⚠️ NOHA 配置区：已更新为你真实的 Google Form 信息
+    // ============================================================
+    const FORM_CONFIG = {
+        // 1. 你的表单链接
+        baseUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc2o2D5bsn-nlNTCTFtcr6Pc4UGMHT5QXqG8xjvGJ6HbzveDw/viewform",
+
+        // 2. 你的题目 ID (从你的链接里提取出来的)
+        fields: {
+            orderId:    "entry.1494565784", // 对应 Order ID (111)
+            items:      "entry.866891029",  // 对应 Cart Items (222)
+            total:      "entry.514552742",  // 对应 Total Amount (333)
+        }
+    };
+
+    // --- 核心功能 ---
+
+    function loadCart() {
+        const cart = JSON.parse(localStorage.getItem('lumi_cart') || '[]');
+        const list = document.getElementById('cartList');
+        const summary = document.getElementById('summarySection');
+        
+        if (cart.length === 0) {
+            list.innerHTML = `<div class="empty-msg">Your bag is empty.</div>`;
+            summary.style.display = 'none';
+            return;
+        }
+
+        let total = 0;
+        list.innerHTML = cart.map(item => {
+            const lineTotal = item.price * item.qty;
+            total += lineTotal;
+            // 处理图片：如果是本地图片路径，这里直接用；如果是占位符，也能用
+            const imgSrc = item.img || 'https://via.placeholder.com/150'; 
+            
+            return `
+                <div class="cart-item">
+                    <img src="${imgSrc}" class="item-img">
+                    <div class="item-info">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-price">RM ${item.price} x ${item.qty}</div>
+                        <div class="item-controls">
+                            <button class="qty-btn" onclick="updateQty('${item.id}', -1)">−</button>
+                            <span>${item.qty}</span>
+                            <button class="qty-btn" onclick="updateQty('${item.id}', 1)">+</button>
+                        </div>
+                    </div>
+                    <div style="font-weight:600">RM ${lineTotal.toFixed(2)}</div>
+                </div>
+            `;
+        }).join('');
+
+        document.getElementById('finalTotal').innerText = total.toFixed(2);
+        summary.style.display = 'block';
+    }
+
+    function updateQty(id, delta) {
+        let cart = JSON.parse(localStorage.getItem('lumi_cart'));
+        const item = cart.find(i => i.id === id);
+        if (item) {
+            item.qty += delta;
+            if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+            localStorage.setItem('lumi_cart', JSON.stringify(cart));
+            loadCart();
+        }
+    }
+
+    // --- 🚀 Checkout 核心逻辑 (导入 Google Form) ---
+    function openCheckoutForm() {
+        const cart = JSON.parse(localStorage.getItem('lumi_cart') || '[]');
+        if (cart.length === 0) return;
+
+        // 1. 生成订单号 (例如: LD-20260217-X8K2)
+        const dateStr = new Date().toISOString().slice(0,10).replace(/-/g, "");
+        const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+        const orderId = `LD-${dateStr}-${randomSuffix}`;
+
+        // 2. 计算总价
+        const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0).toFixed(2);
+
+        // 3. 简化版购物车字符串 (防止 URL 过长)
+        // 格式: "Pro Stand (x1), Focus Lamp (x2)"
+        const cartString = cart.map(i => `${i.name} (x${i.qty})`).join(", ");
+
+        // 4. 保存 Order ID (为了给 Receipt 页面用，虽然目前还没接 API)
+        localStorage.setItem('lumi_last_order', JSON.stringify({
+            id: orderId,
+            total: totalAmount,
+            items: cart,
+            date: new Date().toLocaleString()
+        }));
+
+        // 5. 拼装 Google Form URL
+        const params = new URLSearchParams();
+        params.append(FORM_CONFIG.fields.orderId, orderId);
+        params.append(FORM_CONFIG.fields.items, cartString); // 传简化版内容
+        params.append(FORM_CONFIG.fields.total, totalAmount);
+        
+        // 如果你有 Name / Phone 字段，也可以在这里 append
+        // params.append(FORM_CONFIG.fields.customerName, "Guest"); 
+
+        const finalUrl = `${FORM_CONFIG.baseUrl}?${params.toString()}`;
+
+        // 6. 跳转 (iframe 安全版)
+        try {
+            window.top.location.href = finalUrl;
+        } catch (e) {
+            window.location.href = finalUrl;
+        }
+    }
+
+    function goBack() {
+        try { window.top.location.href = 'index.html'; } 
+        catch (e) { window.location.href = 'index.html'; }
+    }
+
+    // Init
+    loadCart();
+</script>
+
+</body>
+</html>
