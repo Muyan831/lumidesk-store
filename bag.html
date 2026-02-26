@@ -13,6 +13,8 @@
             --accent: #0071e3; --border: #d2d2d7; --bg-secondary: #f5f5f7;
             --glass: rgba(255, 255, 255, 0.72);
             --radius: 18px;
+            --accent-green: #34c759; 
+            --accent-red: #ff3b30;
         }
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; background: var(--bg); color: var(--text); }
@@ -38,10 +40,22 @@
         .item-controls { display: flex; align-items: center; gap: 15px; margin-top: 8px; }
         .qty-btn { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; }
         
-        /* Summary */
-        .summary-section { margin-top: 40px; text-align: right; }
-        .total-row { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
-        .checkout-btn { background: var(--text); color: white; padding: 16px 40px; border-radius: 40px; font-size: 16px; font-weight: 600; border: none; cursor: pointer; transition: 0.3s; }
+        /* Summary & Promo Code */
+        .summary-section { margin-top: 40px; display: flex; flex-direction: column; align-items: flex-end; }
+        
+        .promo-box { display: flex; gap: 10px; margin-bottom: 10px; width: 100%; max-width: 300px; }
+        .promo-input { flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; outline: none; transition: border 0.3s; }
+        .promo-input:focus { border-color: var(--text); }
+        .promo-btn { background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text); padding: 0 16px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .promo-btn:hover { background: #e8e8ed; }
+        .promo-msg { font-size: 13px; font-weight: 500; min-height: 20px; margin-bottom: 20px; text-align: right; width: 100%; max-width: 300px; }
+
+        .price-breakdown { text-align: right; width: 100%; max-width: 300px; border-top: 1px solid var(--border); padding-top: 20px; margin-bottom: 24px; }
+        .price-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 15px; color: var(--text-muted); }
+        .price-row.discount { color: var(--accent-green); font-weight: 500; }
+        .total-row { display: flex; justify-content: space-between; font-size: 24px; font-weight: 700; color: var(--text); margin-top: 12px; }
+
+        .checkout-btn { background: var(--text); color: white; padding: 16px 40px; border-radius: 40px; font-size: 16px; font-weight: 600; border: none; cursor: pointer; transition: 0.3s; width: 100%; max-width: 300px; }
         .checkout-btn:hover { transform: scale(1.02); background: #000; }
         .empty-msg { text-align: center; color: var(--text-muted); margin-top: 60px; font-size: 18px; }
 
@@ -51,14 +65,13 @@
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px);
-            z-index: 2000; display: none; /* 默认隐藏 */
-            justify-content: center; align-items: center;
+            z-index: 2000; display: none; justify-content: center; align-items: center;
             opacity: 0; transition: opacity 0.3s ease;
         }
         .modal-overlay.active { display: flex; opacity: 1; }
 
         .modal-card {
-            background: white; width: 90%; max-width: 640px; height: 85vh;
+            background: white; width: 90%; max-width: 640px; height: 90vh;
             border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             overflow: hidden; position: relative; display: flex; flex-direction: column;
             transform: scale(0.95); transition: transform 0.3s ease;
@@ -68,20 +81,23 @@
         .modal-header {
             padding: 15px 20px; border-bottom: 1px solid var(--border);
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.9); flex-shrink: 0;
         }
         .modal-title { font-weight: 600; font-size: 16px; }
-        .close-btn {
-            background: #e5e5e5; border: none; width: 30px; height: 30px; border-radius: 50%;
-            cursor: pointer; font-weight: bold; color: #555; font-size: 18px;
-            display: flex; align-items: center; justify-content: center;
-        }
+        .close-btn { background: #e5e5e5; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold; color: #555; font-size: 18px; display: flex; align-items: center; justify-content: center; }
         
-        /* 嵌入的 Google Form */
+        .iframe-container { flex: 1; overflow: hidden; position: relative; }
         iframe { width: 100%; height: 100%; border: none; background: #fafafa; }
+
+        .modal-footer {
+            padding: 15px 20px; border-top: 1px solid var(--border); background: #f9f9f9; text-align: center; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px;
+        }
+        .finish-btn { background: var(--accent-green); color: white; padding: 12px 24px; border-radius: 40px; font-size: 15px; font-weight: 600; border: none; cursor: pointer; width: 100%; transition: 0.2s; }
+        .finish-btn:hover { background: #28a745; transform: scale(1.02); }
+        .hint-text { font-size: 12px; color: var(--text-muted); }
     </style>
 </head>
-<body>
+<body id="mainBody">
 
 <nav>
     <a onclick="goBack()" class="nav-link">← Continue Shopping</a>
@@ -92,7 +108,27 @@
     <div id="cartList"></div>
     
     <div class="summary-section" id="summarySection" style="display:none;">
-        <div class="total-row">Total: RM <span id="finalTotal">0.00</span></div>
+        <div class="promo-box">
+            <input type="text" id="promoCode" class="promo-input" placeholder="Promo code">
+            <button class="promo-btn" onclick="applyPromo()">Apply</button>
+        </div>
+        <div id="promoMsg" class="promo-msg"></div>
+
+        <div class="price-breakdown">
+            <div class="price-row" id="subtotalRow">
+                <span>Subtotal</span>
+                <span>RM <span id="subtotalAmount">0.00</span></span>
+            </div>
+            <div class="price-row discount" id="discountRow" style="display:none;">
+                <span>Discount</span>
+                <span>- RM <span id="discountAmount">0.00</span></span>
+            </div>
+            <div class="total-row">
+                <span>Total</span>
+                <span>RM <span id="finalTotal">0.00</span></span>
+            </div>
+        </div>
+
         <button class="checkout-btn" onclick="openModal()">Proceed to Checkout</button>
     </div>
 </div>
@@ -103,27 +139,39 @@
             <span class="modal-title">Secure Checkout</span>
             <button class="close-btn" onclick="closeModal()">×</button>
         </div>
-        <iframe id="formFrame" src=""></iframe>
+        <div class="iframe-container">
+            <iframe id="formFrame" src=""></iframe>
+        </div>
+        <div class="modal-footer">
+            <button class="finish-btn" onclick="finishTransaction()">I have submitted my order</button>
+            <span class="hint-text">Please click Submit in the form above first.</span>
+        </div>
     </div>
 </div>
 
 <script>
+    // --- iframe 防嵌修复 ---
+    if (window.self !== window.top) { document.getElementById('mainBody').classList.add('embedded'); }
+
     // ============================================================
-    // ⚠️ NOHA 配置区：请更新你新表单的 ID
+    // ⚠️ NOHA 配置区：已更新为你最新的 Google Form 链接
     // ============================================================
     const FORM_CONFIG = {
-        // 你的表单链接 (记得去掉 viewform 及其后面的参数)
-        baseUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc2o2D5bsn-nlNTCTFtcr6Pc4UGMHT5QXqG8xjvGJ6HbzveDw/viewform",
-
-        // 你的 Entry IDs (请填入你新获取的)
+        baseUrl: "https://docs.google.com/forms/d/e/1FAIpQLSe9ni9r73kQ6tPgvUzL-3Fez0Twan5081k5qt0sKUy_HMhPTg/viewform",
         fields: {
-            orderId:    "entry.1494565784", // Order ID
-            items:      "entry.866891029",  // Cart Items
-            total:      "entry.514552742",  // Total Amount
+            orderId:    "entry.1569249656", // 对应 111 (Order ID)
+            items:      "entry.528642552",  // 对应 222 (Cart Items)
+            total:      "entry.421973586",  // 对应 333 (Total)
         }
     };
 
-    // --- 核心功能 ---
+    // --- 折扣逻辑全局变量 ---
+    let currentDiscountInfo = null; // 存储当前激活的折扣信息
+    let calculatedSubtotal = 0;
+    let calculatedDiscount = 0;
+    let calculatedFinalTotal = 0;
+
+    // --- 加载购物车 ---
     function loadCart() {
         const cart = JSON.parse(localStorage.getItem('lumi_cart') || '[]');
         const list = document.getElementById('cartList');
@@ -135,10 +183,10 @@
             return;
         }
 
-        let total = 0;
+        calculatedSubtotal = 0;
         list.innerHTML = cart.map(item => {
             const lineTotal = item.price * item.qty;
-            total += lineTotal;
+            calculatedSubtotal += lineTotal;
             const imgSrc = item.img || 'https://via.placeholder.com/150'; 
             
             return `
@@ -146,22 +194,23 @@
                     <img src="${imgSrc}" class="item-img">
                     <div class="item-info">
                         <div class="item-name">${item.name}</div>
-                        <div class="item-price">RM ${item.price} x ${item.qty}</div>
+                        <div class="item-price">RM ${item.price.toFixed(2)} x ${item.qty}</div>
                         <div class="item-controls">
                             <button class="qty-btn" onclick="updateQty('${item.id}', -1)">−</button>
                             <span>${item.qty}</span>
                             <button class="qty-btn" onclick="updateQty('${item.id}', 1)">+</button>
                         </div>
                     </div>
-                    <div style="font-weight:600">RM ${lineTotal.toFixed(2)}</div>
+                    <div style="font-weight:600; font-size: 16px;">RM ${lineTotal.toFixed(2)}</div>
                 </div>
             `;
         }).join('');
 
-        document.getElementById('finalTotal').innerText = total.toFixed(2);
-        summary.style.display = 'block';
+        summary.style.display = 'flex';
+        calculateTotals();
     }
 
+    // --- 更新数量 ---
     function updateQty(id, delta) {
         let cart = JSON.parse(localStorage.getItem('lumi_cart'));
         const item = cart.find(i => i.id === id);
@@ -173,53 +222,127 @@
         }
     }
 
-    // --- 🚀 弹窗逻辑 ---
+    // --- 应用折扣码逻辑 ---
+    function applyPromo() {
+        const input = document.getElementById('promoCode').value.trim().toLowerCase();
+        const msg = document.getElementById('promoMsg');
+
+        // 初始化/清除状态
+        currentDiscountInfo = null;
+        msg.style.color = "var(--accent-red)";
+        
+        if (input === '') {
+            msg.innerText = '';
+        } else if (input === 'lumidesk2026') {
+            currentDiscountInfo = { code: 'LUMIDESK2026', type: 'percent', val: 0.05 };
+            msg.style.color = "var(--accent-green)";
+            msg.innerText = '5% discount applied!';
+        } else if (input === 'hariraya') {
+            currentDiscountInfo = { code: 'HARIRAYA', type: 'fixed', val: 3.00 };
+            msg.style.color = "var(--accent-green)";
+            msg.innerText = 'RM 3.00 discount applied!';
+        } else if (input === 'cny123') {
+            currentDiscountInfo = { code: 'CNY123', type: 'fixed', val: 8.80 };
+            msg.style.color = "var(--accent-green)";
+            msg.innerText = 'RM 8.80 discount applied!';
+        } else {
+            msg.innerText = 'Invalid promo code.';
+        }
+        
+        calculateTotals();
+    }
+
+    // --- 计算总价与折扣 ---
+    function calculateTotals() {
+        calculatedDiscount = 0;
+
+        if (currentDiscountInfo) {
+            if (currentDiscountInfo.type === 'percent') {
+                calculatedDiscount = calculatedSubtotal * currentDiscountInfo.val;
+            } else if (currentDiscountInfo.type === 'fixed') {
+                calculatedDiscount = currentDiscountInfo.val;
+            }
+        }
+
+        calculatedFinalTotal = calculatedSubtotal - calculatedDiscount;
+        if (calculatedFinalTotal < 0) calculatedFinalTotal = 0; // 防止倒扣钱
+
+        // 更新 UI 数字
+        document.getElementById('subtotalAmount').innerText = calculatedSubtotal.toFixed(2);
+        document.getElementById('finalTotal').innerText = calculatedFinalTotal.toFixed(2);
+        
+        // 显示或隐藏折扣行
+        const discRow = document.getElementById('discountRow');
+        if (calculatedDiscount > 0) {
+            document.getElementById('discountAmount').innerText = calculatedDiscount.toFixed(2);
+            discRow.style.display = 'flex';
+        } else {
+            discRow.style.display = 'none';
+        }
+    }
+
+    // --- 🚀 提交到 Google Form ---
     function openModal() {
         const cart = JSON.parse(localStorage.getItem('lumi_cart') || '[]');
         if (cart.length === 0) return;
 
-        // 1. 准备数据
+        // 1. 生成订单号
         const dateStr = new Date().toISOString().slice(0,10).replace(/-/g, "");
         const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
         const orderId = `LD-${dateStr}-${randomSuffix}`;
-        const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0).toFixed(2);
-        const cartString = cart.map(i => `${i.name} (x${i.qty})`).join("\n"); // Google Form 段落换行用
+        
+        const finalTotalString = calculatedFinalTotal.toFixed(2);
 
-        // 2. 保存到本地 (备用)
+        // 2. 组装发给 Google Form 的明细 (包含折扣信息)
+        let cartString = cart.map(i => `${i.name} (x${i.qty}) = RM ${(i.price * i.qty).toFixed(2)}`).join("\n"); 
+        
+        // 🚨 如果有折扣，追加说明到 Form 里，这样后台能清晰看到减了多少钱
+        if (calculatedDiscount > 0) {
+            cartString += `\n\nSubtotal: RM ${calculatedSubtotal.toFixed(2)}`;
+            cartString += `\nDiscount (${currentDiscountInfo.code}): -RM ${calculatedDiscount.toFixed(2)}`;
+            cartString += `\n---`;
+        }
+
+        // 3. 缓存给 Receipt 页用
         localStorage.setItem('lumi_last_order', JSON.stringify({
-            id: orderId, total: totalAmount, items: cart, date: new Date().toLocaleString()
+            id: orderId, total: finalTotalString, subtotal: calculatedSubtotal.toFixed(2), 
+            discount: calculatedDiscount.toFixed(2), items: cart, date: new Date().toLocaleString()
         }));
 
-        // 3. 拼接 URL
+        // 4. 拼接 Google Form 链接
         const params = new URLSearchParams();
-        // 注意：这里加上 embedded=true 可以让 Google Form 去掉一些页眉，更适合嵌入
         params.append("embedded", "true"); 
         params.append(FORM_CONFIG.fields.orderId, orderId);
         params.append(FORM_CONFIG.fields.items, cartString);
-        params.append(FORM_CONFIG.fields.total, totalAmount);
+        params.append(FORM_CONFIG.fields.total, finalTotalString); // 发送打折后的最终价
 
         const finalUrl = `${FORM_CONFIG.baseUrl}?${params.toString()}`;
 
-        // 4. 加载到 iframe 并显示弹窗
+        // 5. 加载弹窗
         document.getElementById('formFrame').src = finalUrl;
-        
-        const modal = document.getElementById('checkoutModal');
-        modal.classList.add('active');
+        document.getElementById('checkoutModal').classList.add('active');
     }
 
     function closeModal() {
-        const modal = document.getElementById('checkoutModal');
-        modal.classList.remove('active');
-        // 可选：清空购物车（如果你希望提交后清空，可以在这里做，或者让用户手动清空）
-        // localStorage.removeItem('lumi_cart');
-        // loadCart();
+        document.getElementById('checkoutModal').classList.remove('active');
     }
 
+    // --- 完成订单 ---
+    function finishTransaction() {
+        localStorage.removeItem('lumi_cart'); // 清空购物车
+        loadCart();
+        closeModal();
+        try { window.top.location.href = 'receipt.html'; } 
+        catch (e) { window.location.href = 'receipt.html'; }
+    }
+
+    // --- 退出页面 ---
     function goBack() {
         try { window.top.location.href = 'index.html'; } 
         catch (e) { window.location.href = 'index.html'; }
     }
 
+    // 初始化
     loadCart();
 </script>
 

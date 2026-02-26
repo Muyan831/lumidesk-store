@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Support | LumiDesk</title>
+    <style>
+        /* =========================================
+           🌟 全局基础设置 (Apple Style)
+           ========================================= */
+        :root {
+            --bg: #ffffff; --bg-secondary: #f5f5f7; --text: #1d1d1f; --text-muted: #86868b;
+            --border: #d2d2d7; --accent-blue: #0071e3; --accent-yellow: #FFD60A;
+            --glass: rgba(255, 255, 255, 0.72);
+            --radius-lg: 24px; --radius-md: 16px; --transition: all 0.3s ease;
+        }
+
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; background-color: var(--bg); color: var(--text); }
+        a { text-decoration: none; cursor: pointer; }
+
+        /* --- 导航栏 (全站统一) --- */
+        nav {
+            position: fixed; top: 0; width: 100%; height: 52px;
+            background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .nav-content { max-width: 1024px; margin: 0 auto; height: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; position: relative; }
+        .nav-menu { display: flex; gap: 34px; position: absolute; left: 50%; transform: translateX(-50%); }
+        .nav-menu a { font-size: 13px; font-weight: 500; letter-spacing: .02em; color: var(--text); opacity: 0.8; transition: opacity 0.3s ease; }
+        .nav-menu a:hover { opacity: 1; }
+        .nav-right { margin-left: auto; display: flex; align-items: center; gap: 20px; }
+        .icon-btn { width: 20px; height: 20px; opacity: 0.7; cursor: pointer; color: var(--text); transition: 0.3s; display: block; }
+        .icon-btn:hover { opacity: 1; transform: scale(1.1); }
+        .bag-btn-group { display: flex; align-items: center; gap: 4px; cursor: pointer; opacity: 0.7; transition: 0.3s; }
+        .bag-btn-group:hover { opacity: 1; transform: scale(1.05); }
+        .cart-dot { font-size: 11px; font-weight: 700; color: var(--text); }
+
+        /* --- 客服聊天界面 --- */
+        .support-container { max-width: 800px; margin: 100px auto 60px; padding: 0 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { font-size: 36px; font-weight: 700; letter-spacing: -0.5px; margin: 0 0 10px 0; }
+        .header p { font-size: 17px; color: var(--text-muted); margin: 0; }
+
+        /* 聊天主容器 (改为上下结构，支持无限滚动) */
+        .chat-wrapper {
+            background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg);
+            overflow: hidden; display: flex; flex-direction: column; height: 550px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+        }
+
+        /* 历史消息区 (可滚动) */
+        .chat-history {
+            flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;
+            scroll-behavior: smooth;
+        }
+
+        /* 底部固定选项区 */
+        .chat-bottom {
+            background: var(--bg-secondary); padding: 20px 30px; border-top: 1px solid var(--border);
+        }
+
+        /* 气泡样式 */
+        .msg-row { display: flex; width: 100%; }
+        .msg-row.bot { justify-content: flex-start; }
+        .msg-row.user { justify-content: flex-end; }
+        
+        .bubble {
+            max-width: 85%; padding: 14px 20px; font-size: 15px; line-height: 1.6;
+            border-radius: 20px; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        .bubble.bot { background: var(--bg-secondary); color: var(--text); border-bottom-left-radius: 4px; }
+        .bubble.user { background: var(--text); color: #fff; border-bottom-right-radius: 4px; }
+
+        @keyframes popIn { from { opacity: 0; transform: translateY(10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+        /* 选项按钮 */
+        .options-container { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .option-btn {
+            background: #fff; border: 1px solid var(--border); color: var(--text);
+            padding: 10px 18px; border-radius: 30px; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: var(--transition);
+        }
+        .option-btn:hover { border-color: var(--text); background: #e8e8ed; transform: translateY(-2px); }
+        
+        /* 强调色按钮 (人工) */
+        .option-btn.primary { background: var(--text); color: white; border-color: var(--text); }
+        .option-btn.primary:hover { background: #000; }
+
+        /* 转接人工按钮 (WhatsApp) */
+        .wa-btn {
+            background: #25D366; color: white; border: none;
+            padding: 12px 24px; border-radius: 30px; font-size: 15px; font-weight: 600;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+            transition: transform 0.2s; margin-top: 10px; text-decoration: none;
+        }
+        .wa-btn:hover { transform: scale(1.03); background: #20bd5a; }
+
+        @media (max-width: 768px) { .nav-menu { display: none; } .chat-history { padding: 20px; } .chat-bottom { padding: 15px; } }
+    </style>
+</head>
+<body id="mainBody">
+
+<nav>
+    <div class="nav-content">
+        <div class="nav-menu">
+            <a id="navHome">Home</a>
+            <a id="navProducts">Products</a>
+            <a id="navAbout">About Us</a>
+            <a id="navReceipt">Receipt</a>
+        </div>
+        <div class="nav-right">
+            <svg class="icon-btn" id="kefuBtn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            <div class="bag-btn-group" id="bagBtn">
+                <svg class="icon-btn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+                <span class="cart-dot" id="cartCount">0</span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="support-container">
+    <div class="header">
+        <h1>Hi, how can we help?</h1>
+        <p>Get quick answers or talk to our team.</p>
+    </div>
+
+    <div class="chat-wrapper">
+        <div class="chat-history" id="chatHistory">
+            <div class="msg-row bot">
+                <div class="bubble bot">
+                    Hello! I'm Lumi, your virtual assistant. What do you need help with today? Please select a topic below.
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-bottom">
+            <div class="options-container">
+                <button class="option-btn" onclick="handleQuestion('Buying & Payment')">Buying & Payment</button>
+                <button class="option-btn" onclick="handleQuestion('Delivery & Click/Collect')">Delivery & Click/Collect</button>
+                <button class="option-btn" onclick="handleQuestion('Returns & Refunds')">Returns & Refunds</button>
+                <button class="option-btn primary" onclick="handleQuestion('Speak to Human')">Speak to Human</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Noha: iframe 修复 ---
+    if (window.self !== window.top) { document.getElementById('mainBody').classList.add('embedded'); }
+
+    // --- Noha: 导航栏跳转逻辑 ---
+    const URLS = { HOME: 'index.html', PRODUCTS: 'shop.html', ABOUT: 'aboutus.html', RECEIPT: 'receipt.html', BAG: 'bag.html', KEFU: 'kefu.html' };
+    function go(url) { try { window.top.location.href = url; } catch (e) { window.location.href = url; } }
+    
+    document.getElementById('navHome').onclick = (e) => { e.preventDefault(); go(URLS.HOME); };
+    document.getElementById('navProducts').onclick = (e) => { e.preventDefault(); go(URLS.PRODUCTS); };
+    document.getElementById('navAbout').onclick = (e) => { e.preventDefault(); go(URLS.ABOUT); };
+    document.getElementById('navReceipt').onclick = (e) => { e.preventDefault(); go(URLS.RECEIPT); };
+    document.getElementById('kefuBtn').onclick = () => go(URLS.KEFU);
+    document.getElementById('bagBtn').onclick  = () => go(URLS.BAG);
+
+    const cart = JSON.parse(localStorage.getItem('lumi_cart') || '[]');
+    document.getElementById('cartCount').innerText = cart.reduce((s, i) => s + i.qty, 0);
+
+    // ============================================================
+    // 💬 NOHA: 客服系统逻辑配置区
+    // ============================================================
+    
+    // Noha: 你的 WhatsApp 手机号
+    const WHATSAPP_NUMBER = "601157716982";
+
+    // Noha: 完美融合你的 Policy 文案
+    const FAQ_ANSWERS = {
+        'Buying & Payment': "<b>We do not accept credit card payments at this time.</b><br><br>After completing your details in the Checkout Form and submitting your order, you will be guided to make payment via our supported methods: <b>DuitNow QR, Bank Transfer, or Touch ’n Go eWallet</b>.",
+        
+        'Delivery & Click/Collect': "<b>Delivery:</b><br>Orders to major cities in Peninsular Malaysia are delivered within <b>3–5 working days</b>, while non-metropolitan areas take up to 6 working days. East Malaysia may take additional 1-2 weeks depending on location.<br><br><b>Click & Collect:</b><br>This is a <b>Free service</b>. Once your order is ready, you will receive an email notification. You may collect it yourself or authorise someone else to pick it up on your behalf.",
+        
+        'Returns & Refunds': "At LumiDesk, we are committed to your complete satisfaction. We offer a <b>7-day return policy</b>.<br><br><b>Eligibility:</b> Items must be in original condition, unused, and in their original packaging. Proof of purchase is required. (Note: Plants, food products, used, damaged, or custom-made items are non-returnable).<br><br>Once approved, the refund will be processed to your provided bank account within 7 working days.",
+        
+        'Speak to Human': "Our friendly customer support team is ready to assist you personally! Feel free to reach out via WhatsApp for any enquiries, order amendments, or special requests."
+    };
+
+    const chatHistory = document.getElementById('chatHistory');
+
+    // 处理用户点击选项
+    function handleQuestion(questionText) {
+        // 1. 立即显示用户的提问气泡
+        appendMessage(questionText, 'user');
+
+        // 2. 稍微延迟，模拟机器人在“思考”
+        setTimeout(() => {
+            const answer = FAQ_ANSWERS[questionText];
+            appendMessage(answer, 'bot');
+
+            // 3. 如果用户问的是退货或人工，自动追加 WhatsApp 按钮
+            if (questionText === 'Speak to Human' || questionText === 'Returns & Refunds') {
+                setTimeout(() => {
+                    showHumanTransferOption(questionText);
+                }, 600);
+            }
+        }, 500);
+    }
+
+    // 往聊天框添加气泡
+    function appendMessage(text, sender) {
+        const row = document.createElement('div');
+        row.className = `msg-row ${sender}`;
+        row.innerHTML = `<div class="bubble ${sender}">${text}</div>`;
+        chatHistory.appendChild(row);
+        scrollToBottom();
+    }
+
+    // 显示转接 WhatsApp 的大按钮
+    function showHumanTransferOption(topic) {
+        const row = document.createElement('div');
+        row.className = `msg-row bot`;
+        
+        // 根据用户点的问题，自动帮他写好发给客服的第一句话
+        const waMessage = encodeURIComponent(`Hi LumiDesk Support, I need help regarding: ${topic}.`);
+        const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${waMessage}`;
+
+        row.innerHTML = `
+            <div style="display:flex; flex-direction:column; gap:10px; max-width:85%;">
+                <div class="bubble bot">Please click the button below to connect with our live agent.</div>
+                <a href="${waLink}" target="_blank" class="wa-btn" onclick="return forceNewTab(event, '${waLink}')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                    Chat on WhatsApp
+                </a>
+            </div>
+        `;
+        chatHistory.appendChild(row);
+        scrollToBottom();
+    }
+
+    // 每次发消息自动滚动到最底部
+    function scrollToBottom() {
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    // 强制 WhatsApp 在新标签页打开，避免 Google Sites iframe 拦截
+    function forceNewTab(e, url) {
+        e.preventDefault();
+        try { window.top.open(url, '_blank'); } 
+        catch (err) { window.open(url, '_blank'); }
+        return false;
+    }
+</script>
+
+</body>
+</html>
