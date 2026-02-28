@@ -97,7 +97,7 @@
         .feature-card p { font-size: 14px; color: var(--text-muted); margin: 0; line-height: 1.5; }
 
         /* =========================================
-           3. Promo Carousel 
+           3. Promo Carousel
            ========================================= */
         .promo-section { max-width: 1100px; margin: 60px auto 100px; padding: 0 24px; position: relative; }
         .carousel-viewport { 
@@ -126,21 +126,15 @@
         .dot.active { width: 24px; border-radius: 3px; background: var(--text); }
 
         /* =========================================
-           4. Inspiration Grid (🚀 专为你 4 张宽图定制的布局)
+           4. Inspiration Masonry
            ========================================= */
         .inspiration-section { margin: var(--section-spacing) auto; }
-        .inspiration-grid { 
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; 
-        }
-        .ins-item { 
-            position: relative; border-radius: 20px; overflow: hidden; 
-            background: #f5f5f7; aspect-ratio: 16/9; /* 强制 16:9 完美宽幅比例 */
-        }
-        .ins-img { 
-            width: 100%; height: 100%; background-size: cover; background-position: center; 
-            transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); 
-        }
-        .ins-item:hover .ins-img { transform: scale(1.05); }
+        .masonry-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 250px); gap: 16px; }
+        .masonry-item { position: relative; overflow: hidden; border-radius: 16px; background: #f5f5f7; }
+        .masonry-img { width: 100%; height: 100%; background-size: cover; background-position: center; transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .masonry-item:hover .masonry-img { transform: scale(1.05); }
+        .item-large { grid-column: span 2; grid-row: span 2; }
+        .item-wide { grid-column: span 2; }
 
         /* =========================================
            5. New Arrivals
@@ -174,14 +168,16 @@
         .prod-item:hover .buy-btn-small { background: #1d1d1f; color: white; }
         .glass-tag { position: absolute; top: 10px; left: 10px; padding: 4px 10px; border-radius: 20px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px); font-size: 9px; font-weight: 800; border: 1px solid rgba(255,255,255,0.5); z-index: 2; }
 
-        /* 🚀 全宽横幅 (专门给你的第5张图准备的) */
-        .full-width-banner { width: 100%; height: 400px; margin: var(--section-spacing) 0; background-color: #f5f5f7; background-size: cover; background-position: center; }
+        /* Full Width Banner */
+        .full-width-banner { width: 100%; height: 400px; margin: var(--section-spacing) 0; background-color: var(--bg-secondary); background-size: cover; background-position: center; }
         
         @media (max-width: 768px) {
             .nav-menu { display: none; }
             .feature-grid { grid-template-columns: 1fr; }
             .carousel-viewport { aspect-ratio: 16/10; }
-            .inspiration-grid { grid-template-columns: 1fr; } /* 手机上单列显示，图依然是宽的 */
+            .masonry-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 200px); }
+            .item-large { grid-column: span 2; grid-row: span 2; }
+            .item-wide { grid-column: span 2; }
             .product-scroll { justify-content: flex-start; padding-left: 20px; }
             .full-width-banner { height: 250px; }
         }
@@ -246,18 +242,18 @@
 
 <div class="container-centered inspiration-section">
     <h2 class="section-title-large">More ideas and inspiration</h2>
-    <div class="inspiration-grid">
-        <div class="ins-item">
-            <div class="ins-img" style="background-image: url('images/ins1.jpg');"></div>
+    <div class="masonry-grid">
+        <div class="masonry-item item-large">
+            <div class="masonry-img" style="background-image: url('images/1111.jpg');"></div>
         </div>
-        <div class="ins-item">
-            <div class="ins-img" style="background-image: url('images/ins2.jpg');"></div>
+        <div class="masonry-item">
+            <div class="masonry-img" style="background-image: url('images/2222.jpg');"></div>
         </div>
-        <div class="ins-item">
-            <div class="ins-img" style="background-image: url('images/ins3.jpg');"></div>
+        <div class="masonry-item">
+            <div class="masonry-img" style="background-image: url('images/3333.jpg');"></div>
         </div>
-        <div class="ins-item">
-            <div class="ins-img" style="background-image: url('images/ins4.jpg');"></div>
+        <div class="masonry-item item-wide">
+            <div class="masonry-img" style="background-image: url('images/4444.jpg');"></div>
         </div>
     </div>
 </div>
@@ -311,53 +307,7 @@
     </div>
 </div>
 
-<div class="full-width-banner" style="background-image: url('images/banner-bg.jpg');"></div>
-
-<style>
-    .lumi-footer { background-color: #1d1d1f; color: #f5f5f7; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; padding: 80px 20px 40px; border-top: 1px solid #333; }
-    .lumi-footer-container { max-width: 1024px; margin: 0 auto; }
-    .lumi-footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
-    .footer-col h3 { font-size: 14px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #fff; margin: 0 0 20px 0; }
-    .footer-col p, .footer-col a { font-size: 14px; color: #86868b; line-height: 1.6; margin: 0 0 12px 0; text-decoration: none; display: block; transition: color 0.3s ease; }
-    .footer-col a:hover { color: #FFD60A; }
-    .brand-desc { max-width: 300px; }
-    .contact-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px; }
-    .contact-item svg { width: 18px; height: 18px; flex-shrink: 0; color: #86868b; margin-top: 2px; }
-    .social-links { display: flex; gap: 16px; margin-top: 10px; }
-    .social-icon { width: 40px; height: 40px; border-radius: 50%; background: #2d2d2f; display: flex; align-items: center; justify-content: center; color: #fff; transition: all 0.3s ease; }
-    .social-icon:hover { background: #FFD60A; color: #1d1d1f; transform: translateY(-3px); }
-    .social-icon svg { width: 18px; height: 18px; }
-    .lumi-footer-bottom { border-top: 1px solid #333; padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-    .lumi-footer-bottom p { font-size: 12px; color: #86868b; margin: 0; }
-    @media (max-width: 768px) { .lumi-footer-grid { grid-template-columns: 1fr; gap: 40px; } .lumi-footer { padding: 60px 20px 30px; } .lumi-footer-bottom { flex-direction: column; text-align: center; } }
-</style>
-<footer class="lumi-footer">
-    <div class="lumi-footer-container">
-        <div class="lumi-footer-grid">
-            <div class="footer-col">
-                <h3 style="font-size: 18px; text-transform: none; letter-spacing: -0.5px;">LumiDesk.</h3>
-                <p class="brand-desc">Transforming the way you work and live. We design premium, minimalist workspace solutions for modern professionals and students.</p>
-            </div>
-            <div class="footer-col">
-                <h3>Contact Us</h3>
-                <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><p style="margin:0;">TAR UMT Johor Branch<br>Jalan Segamat/Gemas<br>85000 Segamat, Johor<br>Malaysia</p></div>
-                <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg><p style="margin:0;">+60 11-5771 6982</p></div>
-            </div>
-            <div class="footer-col">
-                <h3>Follow Us</h3>
-                <p>Stay updated with our latest minimal setups and exclusive offers.</p>
-                <div class="social-links">
-                    <a href="https://www.instagram.com/weiren_0929?igsh=M2Foc3l4YWt5a2tl" target="_blank" class="social-icon" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
-                    <a href="https://www.facebook.com/share/1CcwJnQeoD/?mibextid=wwXIfr" target="_blank" class="social-icon" title="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
-                </div>
-            </div>
-        </div>
-        <div class="lumi-footer-bottom">
-            <p>&copy; 2026 LumiDesk Sdn Bhd. All rights reserved.</p>
-            <p>Designed for Focus.</p>
-        </div>
-    </div>
-</footer>
+<div class="full-width-banner" style="background-image: url('images/5555baner.jpg');"></div>
 
 <script>
     if (window.self !== window.top) {
@@ -394,14 +344,13 @@
     document.getElementById('bagBtn').onclick  = () => go(URLS.BAG);
 
     // ============================================================
-    // 🚀 NOHA: 轮播图图片设定
-    // 整个图片都可以点击直接跳转到 Shop！
+    // 🚀 轮播图添加了 images/ 路径和 .jpg 后缀
     // ============================================================
     const PROMOS = [
-        { img: "images/1bb.png" },
-        { img: "images/2bb.png" },
-        { img: "images/3bb.png" },
-        { img: "images/4bb.png" }
+        { img: "images/1bb.jpg" },
+        { img: "images/2bb.jpg" },
+        { img: "images/3bb.jpg" },
+        { img: "images/4bb.jpg" }
     ];
 
     const track = document.getElementById('track');
