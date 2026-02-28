@@ -9,9 +9,15 @@
            🌟 全局基础设置 (Apple Style)
            ========================================= */
         :root {
-            --bg: #ffffff; --bg-secondary: #f5f5f7; --text: #1d1d1f; --text-muted: #86868b;
-            --border: #d2d2d7; --accent-green: #34c759; --glass: rgba(255, 255, 255, 0.72);
-            --radius-lg: 24px; --transition: all 0.3s ease;
+            --bg: #f5f5f7; /* 背景改为浅灰，突出中间白色的发票卡片 */
+            --bg-card: #ffffff; 
+            --text: #1d1d1f; 
+            --text-muted: #86868b;
+            --border: #d2d2d7; 
+            --accent-green: #34c759; 
+            --glass: rgba(255, 255, 255, 0.72);
+            --radius-lg: 24px; 
+            --transition: all 0.3s ease;
         }
 
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
@@ -35,33 +41,57 @@
         .bag-btn-group:hover { opacity: 1; transform: scale(1.05); }
         .cart-dot { font-size: 11px; font-weight: 700; color: var(--text); }
 
-        /* --- 成功提示区 --- */
+        /* --- 成功提示区 (沾满屏幕的秘密在这里) --- */
         .success-container {
-            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 100px 20px 60px; text-align: center; animation: fadeIn 0.8s ease;
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            padding: 120px 20px 80px; width: 100%; animation: fadeIn 0.8s ease;
         }
 
         /* 绿色打勾动画 */
         .check-circle {
-            width: 80px; height: 80px; border-radius: 50%; background: var(--accent-green);
-            display: flex; align-items: center; justify-content: center; margin-bottom: 30px;
+            width: 70px; height: 70px; border-radius: 50%; background: var(--accent-green);
+            display: flex; align-items: center; justify-content: center; margin-bottom: 24px;
             box-shadow: 0 10px 30px rgba(52, 199, 89, 0.3);
             animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
-        .check-circle svg { color: white; width: 40px; height: 40px; }
+        .check-circle svg { color: white; width: 34px; height: 34px; }
 
-        h1 { font-size: 40px; font-weight: 700; letter-spacing: -1px; margin: 0 0 15px 0; }
-        .subtitle { font-size: 18px; color: var(--text-muted); margin: 0 0 40px 0; max-width: 500px; line-height: 1.5; }
+        h1 { font-size: 36px; font-weight: 700; letter-spacing: -1px; margin: 0 0 10px 0; text-align: center; }
+        .subtitle { font-size: 16px; color: var(--text-muted); margin: 0 0 40px 0; text-align: center; max-width: 600px; line-height: 1.5; }
 
-        /* 订单摘要卡片 */
+        /* 🚀 宽屏发票卡片设计 */
         .order-card {
-            background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 30px 40px;
-            width: 100%; max-width: 480px; text-align: left; margin-bottom: 40px;
+            background: var(--bg-card); border-radius: var(--radius-lg); 
+            padding: 40px 50px; width: 100%; max-width: 800px; /* 极大地拓宽了宽度，适合展示商品列表 */
+            text-align: left; margin-bottom: 50px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
         }
-        .order-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 15px; }
-        .order-row:last-child { margin-bottom: 0; padding-top: 15px; border-top: 1px solid var(--border); font-weight: 600; font-size: 18px; color: var(--text); }
-        .row-label { color: var(--text-muted); }
-        .row-value { font-weight: 500; color: var(--text); }
+
+        .card-title { font-size: 20px; font-weight: 600; margin-top: 0; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+
+        .order-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-size: 15px; }
+        .row-label { color: var(--text-muted); display: flex; flex-direction: column; }
+        .row-value { font-weight: 500; color: var(--text); text-align: right; }
+
+        /* 商品列表区块 */
+        .items-section {
+            border-top: 1px dashed var(--border); border-bottom: 1px dashed var(--border);
+            margin: 24px 0; padding: 24px 0;
+        }
+        .item-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .item-row:last-child { margin-bottom: 0; }
+        .item-name { font-weight: 500; color: var(--text); font-size: 15px; margin-bottom: 4px; }
+        .item-qty { font-size: 13px; color: var(--text-muted); }
+        .item-price { font-weight: 500; color: var(--text); }
+
+        /* 总结区块 */
+        .summary-section { padding-top: 8px; }
+        .total-row { 
+            margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); 
+            font-size: 24px; font-weight: 700; color: var(--text); 
+            display: flex; justify-content: space-between; align-items: center;
+        }
 
         /* 按钮 */
         .continue-btn {
@@ -71,10 +101,15 @@
         .continue-btn:hover { transform: scale(1.03); background: #000; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
 
         /* 动画 */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        @media (max-width: 768px) { .nav-menu { display: none; } h1 { font-size: 32px; } .order-card { padding: 25px; } }
+        @media (max-width: 768px) { 
+            .nav-menu { display: none; } 
+            h1 { font-size: 28px; } 
+            .order-card { padding: 30px 20px; border-radius: 16px; } 
+            .total-row { font-size: 20px; }
+        }
     </style>
 </head>
 <body id="mainBody">
@@ -104,10 +139,12 @@
         </svg>
     </div>
     
-    <h1>Order Confirmed</h1>
-    <p class="subtitle">Thank you for shopping with LumiDesk. An official PDF receipt and shipping slip has been sent to your email.</p>
+    <h1>Order Received</h1>
+    <p class="subtitle">Thank you for shopping with LumiDesk. Please complete your payment via DuitNow or Bank Transfer to confirm your order.</p>
 
     <div class="order-card" id="orderCard" style="display:none;">
+        <div class="card-title">Order Summary</div>
+
         <div class="order-row">
             <span class="row-label">Order Number</span>
             <span class="row-value" id="displayOrderId">LD-XXXXX</span>
@@ -118,15 +155,33 @@
         </div>
         <div class="order-row">
             <span class="row-label">Payment Status</span>
-            <span class="row-value" style="color: #f39c12;">Pending Payment</span>
+            <span class="row-value" style="color: #f39c12; font-weight: 600;">Pending Payment</span>
         </div>
-        <div class="order-row">
-            <span class="row-label">Total Amount</span>
-            <span class="row-value">RM <span id="displayTotal">0.00</span></span>
+
+        <div class="items-section" id="receiptItems">
+            </div>
+
+        <div class="summary-section">
+            <div class="order-row">
+                <span class="row-label">Subtotal</span>
+                <span class="row-value">RM <span id="displaySubtotal">0.00</span></span>
+            </div>
+            <div class="order-row" id="shippingRow">
+                <span class="row-label">Shipping</span>
+                <span class="row-value">RM <span id="displayShipping">0.00</span></span>
+            </div>
+            <div class="order-row" id="discountRow" style="display:none; color: var(--accent-green);">
+                <span class="row-label" style="color: var(--accent-green);">Discount</span>
+                <span class="row-value" style="color: var(--accent-green);">- RM <span id="displayDiscount">0.00</span></span>
+            </div>
+            <div class="total-row">
+                <span>Total Amount</span>
+                <span>RM <span id="displayTotal">0.00</span></span>
+            </div>
         </div>
     </div>
 
-    <button class="continue-btn" onclick="go(URLS.HOME)">Continue Shopping</button>
+    <button class="continue-btn" onclick="go(URLS.HOME)">Back to Home</button>
 </div>
 
 <script>
@@ -144,33 +199,69 @@
     document.getElementById('kefuBtn').onclick = () => go(URLS.KEFU);
     document.getElementById('bagBtn').onclick  = () => go(URLS.BAG);
 
-    // 更新购物车徽标（在 Receipt 页面通常是 0，因为买完了）
+    // 购物车结算后清空了，这里显示 0
     const cart = JSON.parse(localStorage.getItem('lumi_cart') || '[]');
     document.getElementById('cartCount').innerText = cart.reduce((s, i) => s + i.qty, 0);
 
     // ============================================================
-    // 🧾 读取最后一次订单数据并显示
+    // 🧾 核心逻辑：精准读取所有订单明细并生成发票
     // ============================================================
     window.onload = () => {
-        // 从 localStorage 获取 bag.html 存下来的订单快照
+        // 读取 bag.html 提交时保存的全部数据
         const lastOrderJSON = localStorage.getItem('lumi_last_order');
         
         if (lastOrderJSON) {
             const orderData = JSON.parse(lastOrderJSON);
             
-            // 填充数据
+            // 1. 填充基础信息
             document.getElementById('displayOrderId').innerText = orderData.id;
-            
-            // 格式化日期 (例如：2026-02-17)
             const dateObj = new Date(orderData.date);
             document.getElementById('displayDate').innerText = dateObj.toLocaleDateString('en-GB'); 
             
+            // 2. 动态生成商品列表 (遍历 items 数组)
+            let itemsHtml = '';
+            if (orderData.items && orderData.items.length > 0) {
+                orderData.items.forEach(item => {
+                    let lineTotal = (item.price * item.qty).toFixed(2);
+                    itemsHtml += `
+                        <div class="item-row">
+                            <div style="flex: 1;">
+                                <div class="item-name">${item.name}</div>
+                                <div class="item-qty">Quantity: ${item.qty} &times; RM ${item.price.toFixed(2)}</div>
+                            </div>
+                            <div class="item-price">RM ${lineTotal}</div>
+                        </div>
+                    `;
+                });
+            } else {
+                itemsHtml = `<div style="color:var(--text-muted); font-size:14px;">No item details found.</div>`;
+            }
+            document.getElementById('receiptItems').innerHTML = itemsHtml;
+
+            // 3. 填充金额总结区
+            document.getElementById('displaySubtotal').innerText = orderData.subtotal;
+            
+            // 处理免邮的情况
+            if(parseFloat(orderData.shipping) === 0) {
+                document.getElementById('displayShipping').innerText = "0.00 (Free)";
+                document.getElementById('shippingRow').style.color = "var(--accent-green)";
+            } else {
+                document.getElementById('displayShipping').innerText = orderData.shipping;
+            }
+
+            // 处理折扣显示
+            if(parseFloat(orderData.discount) > 0) {
+                document.getElementById('discountRow').style.display = 'flex';
+                document.getElementById('displayDiscount').innerText = orderData.discount;
+            }
+
+            // 最终总价
             document.getElementById('displayTotal').innerText = orderData.total;
             
-            // 显示卡片
+            // 最终显示卡片
             document.getElementById('orderCard').style.display = 'block';
         } else {
-            // 如果没有缓存（比如用户直接输入网址进来的），显示备用文案
+            // 没有订单缓存的情况
             document.querySelector('.subtitle').innerHTML = "You have no recent orders. <br>Start building your minimal workspace today.";
         }
     };
