@@ -15,7 +15,7 @@
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; background-color: var(--bg); color: var(--text); }
 
-        /* --- 导航栏 (保持统一) --- */
+        /* --- 导航栏 --- */
         nav {
             position: fixed; top: 0; width: 100%; height: 52px;
             background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -23,7 +23,7 @@
         }
         .nav-content { max-width: 1024px; margin: 0 auto; height: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; position: relative; }
         .nav-menu { display: flex; gap: 34px; position: absolute; left: 50%; transform: translateX(-50%); }
-        .nav-menu a { font-size: 13px; font-weight: 500; letter-spacing: .02em; color: var(--text); opacity: 0.8; cursor: pointer; text-decoration: none; }
+        .nav-menu a { font-size: 13px; font-weight: 500; letter-spacing: .02em; color: var(--text); opacity: 0.8; cursor: pointer; text-decoration: none; transition: opacity 0.3s ease; }
         .nav-menu a:hover { opacity: 1; }
         
         .nav-right { margin-left: auto; display: flex; align-items: center; gap: 20px; }
@@ -46,17 +46,22 @@
 
         /* 商品网格 */
         .product-grid { max-width: 1200px; margin: 0 auto 100px; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 32px; padding: 0 24px; }
-        .product-card { background: var(--card-bg); border-radius: var(--radius-lg); padding: 16px; transition: var(--transition); position: relative; border: 1px solid rgba(0,0,0,0.02); }
+        .product-card { background: var(--card-bg); border-radius: var(--radius-lg); padding: 16px; transition: var(--transition); position: relative; border: 1px solid rgba(0,0,0,0.02); display: flex; flex-direction: column; }
         .product-card:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.06); transform: translateY(-8px); }
         
         .img-wrap { width: 100%; aspect-ratio: 1 / 1; background: var(--bg-secondary); border-radius: var(--radius-md); overflow: hidden; margin-bottom: 20px; }
         .img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; mix-blend-mode: multiply; }
         .product-card:hover .img-wrap img { transform: scale(1.05); }
 
-        .p-name { font-size: 17px; font-weight: 600; margin-bottom: 4px; color: #1d1d1f; }
-        .p-price { font-size: 15px; color: var(--text-muted); margin-bottom: 16px; font-weight: 500; }
+        .p-name { font-size: 17px; font-weight: 600; margin-bottom: 6px; color: #1d1d1f; }
         
-        .add-btn { width: 100%; padding: 12px; border-radius: 50px; border: none; background: var(--btn-black); color: white; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 13px; }
+        /* 🚀 已经修改：移除文字行数截断，允许完整显示介绍文字 */
+        .p-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; flex: 1; }
+        
+        .p-price { font-size: 15px; color: var(--text); margin-bottom: 16px; font-weight: 600; }
+        
+        .add-btn { width: 100%; padding: 12px; border-radius: 50px; border: none; background: var(--bg-secondary); color: var(--text); font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 13px; margin-top: auto; }
+        .product-card:hover .add-btn { background: var(--btn-black); color: white; }
         .add-btn:active { transform: scale(0.96); opacity: 0.9; }
 
         /* Toast 提示 */
@@ -65,7 +70,7 @@
         @media (max-width: 768px) { .nav-menu { display: none; } }
     </style>
 </head>
-<body>
+<body id="mainBody">
 
 <nav>
     <div class="nav-content">
@@ -103,48 +108,75 @@
 <div class="toast" id="toast">Added to Bag</div>
 
 <script>
-    // --- Noha: URL Config ---
+    // iframe 防嵌修复
+    if (window.self !== window.top) { document.getElementById('mainBody').classList.add('embedded'); }
+
     const URLS = { HOME: 'index.html', PRODUCTS: 'shop.html', ABOUT: 'aboutus.html', RECEIPT: 'receipt.html', BAG: 'bag.html', KEFU: 'kefu.html' };
-    
     function go(url) { try { window.top.location.href = url; } catch (e) { window.location.href = url; } }
 
-    // --- Noha: Master Product Database (Strict ID) ---
-    // Noha: I'm using online placeholder images for now. Replace 'img' values with local paths (e.g. 'images/ls1.jpg') when ready.
+    // ============================================================
+    // 📦 NOHA: 终极商品数据库 (本地图片 + 高级英文简介 + 学生价格)
+    // ============================================================
     const PRODUCTS_DATA = [
-      // Laptop Stands
-      { id:'ls1', cat:'Laptop Stands', name:'AluStand Pro', price:129.00, img:'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?q=80&w=600' },
-      { id:'ls2', cat:'Laptop Stands', name:'Vertical Dock One', price:89.00, img:'https://picsum.photos/seed/ls2/600' },
-      { id:'ls3', cat:'Laptop Stands', name:'FoldLite Travel Stand', price:45.00, img:'https://picsum.photos/seed/ls3/600' },
-      { id:'ls4', cat:'Laptop Stands', name:'ErgoLift Elite', price:159.00, img:'https://picsum.photos/seed/ls4/600' },
-      { id:'ls5', cat:'Laptop Stands', name:'Walnut Premium Stand', price:110.00, img:'https://picsum.photos/seed/ls5/600' },
+      // --- A: Laptop Stands ---
+      { id:'ls1', cat:'Laptop Stands', name:'Alu Stand Pro', price: 45.00, img:'images/a1.jpg', 
+        desc:'Crafted from premium aluminum, this stand offers durable, lightweight support for daily tasks.' },
+      { id:'ls2', cat:'Laptop Stands', name:'Vertical Dock One', price: 60.00, img:'images/a2.jpg', 
+        desc:'Maximize your workspace with a sleek vertical design that securely docks your device.' },
+      { id:'ls3', cat:'Laptop Stands', name:'Foldlite Travel Stand', price: 30.00, img:'images/a3.jpg', 
+        desc:'A highly portable, foldable stand engineered for students and professionals on the go.' },
+      { id:'ls4', cat:'Laptop Stands', name:'Ergolift Elite', price: 80.00, img:'images/a4.jpg', 
+        desc:'Ergonomically designed with adjustable height to ensure comfort during long study sessions.' },
+      { id:'ls5', cat:'Laptop Stands', name:'Walnut Premium Stand', price: 120.00, img:'images/a5.jpg', 
+        desc:'A premium wooden stand that seamlessly blends elegant aesthetics with robust functionality.' },
 
-      // Desk Lamps
-      { id:'dl1', cat:'Desk Lamps', name:'GlowBar Pro Lamp', price:159.00, img:'https://images.unsplash.com/photo-1534234828569-16d1d2d3e915?q=80&w=600' },
-      { id:'dl2', cat:'Desk Lamps', name:'Orbit LED Halo', price:199.00, img:'https://picsum.photos/seed/dl2/600' },
-      { id:'dl3', cat:'Desk Lamps', name:'Amber Night Lamp', price:79.00, img:'https://picsum.photos/seed/dl3/600' },
-      { id:'dl4', cat:'Desk Lamps', name:'Linear Task Light', price:120.00, img:'https://picsum.photos/seed/dl4/600' },
-      { id:'dl5', cat:'Desk Lamps', name:'Studio Beam Lamp', price:240.00, img:'https://picsum.photos/seed/dl5/600' },
+      // --- B: Desk Lamps ---
+      { id:'dl1', cat:'Desk Lamps', name:'Glowbar Pro Lamp', price: 50.00, img:'images/b1.jpg', 
+        desc:'A versatile LED strip light featuring easily adjustable brightness for optimal focus.' },
+      { id:'dl2', cat:'Desk Lamps', name:'Orbit LED Halo', price: 40.00, img:'images/b2.jpg', 
+        desc:'A circular LED halo that casts a soft, uniform glow to reduce eye strain.' },
+      { id:'dl3', cat:'Desk Lamps', name:'Amber Night Lamp', price: 25.00, img:'images/b3.jpg', 
+        desc:'A calming amber night lamp perfect for winding down or bedside reading.' },
+      { id:'dl4', cat:'Desk Lamps', name:'Linear Task Light', price: 35.00, img:'images/b4.jpg', 
+        desc:'A streamlined linear task light engineered specifically for intensive reading.' },
+      { id:'dl5', cat:'Desk Lamps', name:'Studio Beam Lamp', price: 70.00, img:'images/b5.jpg', 
+        desc:'A studio-grade beam lamp providing fully adjustable angles for precision lighting.' },
 
-      // Cable Organizers
-      { id:'co1', cat:'Cable Organizers', name:'MagClip Cable Box', price:35.00, img:'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=600' },
-      { id:'co2', cat:'Cable Organizers', name:'Silicone Cable Holder', price:15.00, img:'https://picsum.photos/seed/co2/600' },
-      { id:'co3', cat:'Cable Organizers', name:'UnderDesk Cable Tray', price:49.00, img:'https://picsum.photos/seed/co3/600' },
-      { id:'co4', cat:'Cable Organizers', name:'Braided Cable Sleeves', price:22.00, img:'https://picsum.photos/seed/co4/600' },
-      { id:'co5', cat:'Cable Organizers', name:'Flex Cable Spine', price:55.00, img:'https://picsum.photos/seed/co5/600' },
+      // --- C: Cable Organizers ---
+      { id:'co1', cat:'Cable Organizers', name:'Silicone Cable Holder', price: 10.00, img:'images/c1.jpg', 
+        desc:'A minimalist silicone clip designed to keep your essential cables firmly in place.' },
+      { id:'co2', cat:'Cable Organizers', name:'Magclip Cable Box', price: 15.00, img:'images/c2.jpg', 
+        desc:'A magnetic cable management box that elegantly hides excess wires from view.' },
+      { id:'co3', cat:'Cable Organizers', name:'Underdesk Cable Tray', price: 20.00, img:'images/c3.jpg', 
+        desc:'A durable under-desk tray built to route and conceal heavy power adapters.' },
+      { id:'co4', cat:'Cable Organizers', name:'Braided Cable Sleeves', price: 8.00, img:'images/c4.jpg', 
+        desc:'Flexible braided sleeves to protect, bundle, and organize your desktop wires.' },
+      { id:'co5', cat:'Cable Organizers', name:'Flex Cable Spine', price: 25.00, img:'images/c5.jpg', 
+        desc:'A versatile, bendable spine organizer that neatly routes cables from desk to floor.' },
 
-      // Storage & Trays
-      { id:'st1', cat:'Storage & Trays', name:'Zen Tray Organizer', price:65.00, img:'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?q=80&w=600' },
-      { id:'st2', cat:'Storage & Trays', name:'Modular Storage Bin', price:28.00, img:'https://picsum.photos/seed/st2/600' },
-      { id:'st3', cat:'Storage & Trays', name:'Premium Felt Desk Mat', price:40.00, img:'https://picsum.photos/seed/st3/600' },
-      { id:'st4', cat:'Storage & Trays', name:'Drawer Organizer Set', price:19.00, img:'https://picsum.photos/seed/st4/600' },
-      { id:'st5', cat:'Storage & Trays', name:'Tech Essentials Case', price:45.00, img:'https://picsum.photos/seed/st5/600' },
+      // --- D: Storage & Trays ---
+      { id:'st1', cat:'Storage & Trays', name:'Zen Tray Organizer', price: 15.00, img:'images/d1.jpg', 
+        desc:'A minimalist Zen-inspired tray, perfect for organizing small desktop accessories.' },
+      { id:'st2', cat:'Storage & Trays', name:'Modular Storage Bin', price: 20.00, img:'images/d2.jpg', 
+        desc:'Modular storage bins designed to be combined and stacked to fit your space.' },
+      { id:'st3', cat:'Storage & Trays', name:'Premium Felt Desk Mat', price: 25.00, img:'images/d3.jpg', 
+        desc:'A premium felt mat that provides a smooth, anti-slip surface for your mouse.' },
+      { id:'st4', cat:'Storage & Trays', name:'Drawer Organizer Set', price: 12.00, img:'images/d4.jpg', 
+        desc:'A multi-compartment drawer divider set to keep your stationery perfectly sorted.' },
+      { id:'st5', cat:'Storage & Trays', name:'Tech Essentials Case', price: 18.00, img:'images/d5.jpg', 
+        desc:'A compact, portable case to securely store and transport your tech essentials.' },
 
-      // Home Office Décor
-      { id:'hd1', cat:'Home Office Décor', name:'Concrete Desk Planter', price:32.00, img:'https://picsum.photos/seed/hd1/600' },
-      { id:'hd2', cat:'Home Office Décor', name:'Minimal Wall Clock', price:58.00, img:'https://picsum.photos/seed/hd2/600' },
-      { id:'hd3', cat:'Home Office Décor', name:'Classic Sand Timer', price:25.00, img:'https://picsum.photos/seed/hd3/600' },
-      { id:'hd4', cat:'Home Office Décor', name:'Aroma Diffuser Pro', price:85.00, img:'https://picsum.photos/seed/hd4/600' },
-      { id:'hd5', cat:'Home Office Décor', name:'Framed Art Print', price:120.00, img:'https://picsum.photos/seed/hd5/600' }
+      // --- E: Home Office Decor ---
+      { id:'hd1', cat:'Home Office Décor', name:'Concrete Desk Planter', price: 20.00, img:'images/e1.jpg', 
+        desc:'A concrete desktop planter bringing a touch of minimalist industrial nature.' },
+      { id:'hd2', cat:'Home Office Décor', name:'Minimal Wall Clock', price: 15.00, img:'images/e2.jpg', 
+        desc:'A sleek, minimalist wall clock featuring a completely silent sweeping mechanism.' },
+      { id:'hd3', cat:'Home Office Décor', name:'Classic Sand Timer', price: 10.00, img:'images/e3.jpg', 
+        desc:'An elegant glass sand timer that serves as both classic decor and a focus tool.' },
+      { id:'hd4', cat:'Home Office Décor', name:'Aroma Diffuser Pro', price: 30.00, img:'images/e4.jpg', 
+        desc:'A USB-powered aroma diffuser designed to create a calming and productive atmosphere.' },
+      { id:'hd5', cat:'Home Office Décor', name:'Framed Art Print', price: 25.00, img:'images/e5.jpg', 
+        desc:'A beautifully framed art print featuring inspirational themes to elevate your mood.' }
     ];
 
     // --- Render Logic ---
@@ -154,8 +186,9 @@
         
         grid.innerHTML = filtered.map(p => `
             <div class="product-card">
-                <div class="img-wrap"><img src="${p.img}" alt="${p.name}"></div>
+                <div class="img-wrap"><img src="${p.img}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/400x400?text=Image+Not+Found'"></div>
                 <div class="p-name">${p.name}</div>
+                <div class="p-desc">${p.desc}</div>
                 <div class="p-price">RM ${p.price.toFixed(2)}</div>
                 <button class="add-btn" onclick="addToCart('${p.id}')">Add to Bag</button>
             </div>
@@ -164,31 +197,26 @@
         document.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c.dataset.cat === category));
     }
 
-    // --- Cart Logic (Strict ID) ---
+    // --- Cart Logic ---
     function addToCart(id) {
-        // 1. Find product by ID from master DB
         const product = PRODUCTS_DATA.find(p => p.id === id);
         if(!product) return false;
 
-        // 2. Read current cart
         let cart = JSON.parse(localStorage.getItem('lumi_cart') || '[]');
-        
-        // 3. Check duplicate
         const exist = cart.find(item => item.id === id);
+        
         if(exist) { 
             exist.qty += 1; 
         } else { 
-            // 4. Push normalized data
             cart.push({
                 id: product.id,
                 name: product.name,
                 price: product.price,
-                img: product.img, // Optional for bag display
+                img: product.img,
                 qty: 1
             }); 
         }
         
-        // 5. Save & Update
         localStorage.setItem('lumi_cart', JSON.stringify(cart));
         updateUI();
         showToast(`Added ${product.name}`);
@@ -208,20 +236,17 @@
         setTimeout(() => t.style.display = 'none', 2000);
     }
 
-    // --- URL Auto-Handler (The Bridge between Home & Shop) ---
+    // --- URL Auto-Handler (从首页过来的导流) ---
     function handleIncomingAddRequest() {
         const url = new URL(window.location.href);
-        const pid = url.searchParams.get('add'); // e.g. ?add=ls1
+        const pid = url.searchParams.get('add');
         
         if(pid) {
             const success = addToCart(pid);
             if(success) {
-                // Auto-switch filter to that category so user sees it
                 const targetProduct = PRODUCTS_DATA.find(p => p.id === pid);
                 if(targetProduct) renderProducts(targetProduct.cat);
             }
-            
-            // CLEANUP: Remove ?add= from URL so refresh doesn't add again
             url.searchParams.delete('add');
             window.history.replaceState({}, "", url.toString());
         }
@@ -232,7 +257,6 @@
         if(e.target.classList.contains('chip')) renderProducts(e.target.dataset.cat);
     };
 
-    // Nav Events
     document.getElementById('navHome').onclick = (e) => { e.preventDefault(); go(URLS.HOME); };
     document.getElementById('navProducts').onclick = (e) => { e.preventDefault(); go(URLS.PRODUCTS); };
     document.getElementById('navAbout').onclick = (e) => { e.preventDefault(); go(URLS.ABOUT); };
@@ -242,14 +266,59 @@
 
     // --- Init ---
     window.onload = () => {
-        handleIncomingAddRequest(); // Check if Home sent us here with a product
-        
-        // If handleIncoming didn't render specific cat, render All
+        handleIncomingAddRequest(); 
         if(document.getElementById('productGrid').innerHTML === '') {
             renderProducts('All');
         }
         updateUI();
     };
 </script>
+
+<style>
+    .lumi-footer { background-color: #1d1d1f; color: #f5f5f7; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; padding: 80px 20px 40px; margin-top: 60px; border-top: 1px solid #333; }
+    .lumi-footer-container { max-width: 1024px; margin: 0 auto; }
+    .lumi-footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
+    .footer-col h3 { font-size: 14px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #fff; margin: 0 0 20px 0; }
+    .footer-col p, .footer-col a { font-size: 14px; color: #86868b; line-height: 1.6; margin: 0 0 12px 0; text-decoration: none; display: block; transition: color 0.3s ease; }
+    .footer-col a:hover { color: #FFD60A; }
+    .brand-desc { max-width: 300px; }
+    .contact-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px; }
+    .contact-item svg { width: 18px; height: 18px; flex-shrink: 0; color: #86868b; margin-top: 2px; }
+    .social-links { display: flex; gap: 16px; margin-top: 10px; }
+    .social-icon { width: 40px; height: 40px; border-radius: 50%; background: #2d2d2f; display: flex; align-items: center; justify-content: center; color: #fff; transition: all 0.3s ease; }
+    .social-icon:hover { background: #FFD60A; color: #1d1d1f; transform: translateY(-3px); }
+    .social-icon svg { width: 18px; height: 18px; }
+    .lumi-footer-bottom { border-top: 1px solid #333; padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .lumi-footer-bottom p { font-size: 12px; color: #86868b; margin: 0; }
+    @media (max-width: 768px) { .lumi-footer-grid { grid-template-columns: 1fr; gap: 40px; } .lumi-footer { padding: 60px 20px 30px; } .lumi-footer-bottom { flex-direction: column; text-align: center; } }
+</style>
+<footer class="lumi-footer">
+    <div class="lumi-footer-container">
+        <div class="lumi-footer-grid">
+            <div class="footer-col">
+                <h3 style="font-size: 18px; text-transform: none; letter-spacing: -0.5px;">LumiDesk.</h3>
+                <p class="brand-desc">Transforming the way you work and live. We design premium, minimalist workspace solutions for modern professionals and students.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Contact Us</h3>
+                <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><p style="margin:0;">TAR UMT Johor Branch<br>Jalan Segamat/Gemas<br>85000 Segamat, Johor<br>Malaysia</p></div>
+                <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg><p style="margin:0;">+60 11-5771 6982</p></div>
+            </div>
+            <div class="footer-col">
+                <h3>Follow Us</h3>
+                <p>Stay updated with our latest minimal setups and exclusive offers.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/weiren_0929?igsh=M2Foc3l4YWt5a2tl" target="_blank" class="social-icon" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                    <a href="https://www.facebook.com/share/1CcwJnQeoD/?mibextid=wwXIfr" target="_blank" class="social-icon" title="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                </div>
+            </div>
+        </div>
+        <div class="lumi-footer-bottom">
+            <p>&copy; 2026 LumiDesk Sdn Bhd. All rights reserved.</p>
+            <p>Designed for Focus.</p>
+        </div>
+    </div>
+</footer>
+
 </body>
 </html>

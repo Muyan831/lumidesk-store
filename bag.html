@@ -43,19 +43,20 @@
         /* Summary & Promo Code */
         .summary-section { margin-top: 40px; display: flex; flex-direction: column; align-items: flex-end; }
         
-        .promo-box { display: flex; gap: 10px; margin-bottom: 10px; width: 100%; max-width: 300px; }
+        .promo-box { display: flex; gap: 10px; margin-bottom: 10px; width: 100%; max-width: 320px; }
         .promo-input { flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; outline: none; transition: border 0.3s; }
         .promo-input:focus { border-color: var(--text); }
         .promo-btn { background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text); padding: 0 16px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; }
         .promo-btn:hover { background: #e8e8ed; }
-        .promo-msg { font-size: 13px; font-weight: 500; min-height: 20px; margin-bottom: 20px; text-align: right; width: 100%; max-width: 300px; }
+        .promo-msg { font-size: 13px; font-weight: 600; min-height: 20px; margin-bottom: 20px; text-align: right; width: 100%; max-width: 320px; }
 
-        .price-breakdown { text-align: right; width: 100%; max-width: 300px; border-top: 1px solid var(--border); padding-top: 20px; margin-bottom: 24px; }
-        .price-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 15px; color: var(--text-muted); }
+        /* 价格明细面板 */
+        .price-breakdown { text-align: right; width: 100%; max-width: 320px; border-top: 1px solid var(--border); padding-top: 20px; margin-bottom: 24px; }
+        .price-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 15px; color: var(--text-muted); transition: color 0.3s; }
         .price-row.discount { color: var(--accent-green); font-weight: 500; }
         .total-row { display: flex; justify-content: space-between; font-size: 24px; font-weight: 700; color: var(--text); margin-top: 12px; }
 
-        .checkout-btn { background: var(--text); color: white; padding: 16px 40px; border-radius: 40px; font-size: 16px; font-weight: 600; border: none; cursor: pointer; transition: 0.3s; width: 100%; max-width: 300px; }
+        .checkout-btn { background: var(--text); color: white; padding: 16px 40px; border-radius: 40px; font-size: 16px; font-weight: 600; border: none; cursor: pointer; transition: 0.3s; width: 100%; max-width: 320px; }
         .checkout-btn:hover { transform: scale(1.02); background: #000; }
         .empty-msg { text-align: center; color: var(--text-muted); margin-top: 60px; font-size: 18px; }
 
@@ -95,6 +96,7 @@
         .finish-btn { background: var(--accent-green); color: white; padding: 12px 24px; border-radius: 40px; font-size: 15px; font-weight: 600; border: none; cursor: pointer; width: 100%; transition: 0.2s; }
         .finish-btn:hover { background: #28a745; transform: scale(1.02); }
         .hint-text { font-size: 12px; color: var(--text-muted); }
+
     </style>
 </head>
 <body id="mainBody">
@@ -118,6 +120,10 @@
             <div class="price-row" id="subtotalRow">
                 <span>Subtotal</span>
                 <span>RM <span id="subtotalAmount">0.00</span></span>
+            </div>
+            <div class="price-row" id="shippingRow">
+                <span>Shipping Fee</span>
+                <span>RM <span id="shippingAmount">5.90</span></span>
             </div>
             <div class="price-row discount" id="discountRow" style="display:none;">
                 <span>Discount</span>
@@ -149,25 +155,73 @@
     </div>
 </div>
 
+<style>
+    .lumi-footer { background-color: #1d1d1f; color: #f5f5f7; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; padding: 80px 20px 40px; margin-top: 60px; border-top: 1px solid #333; }
+    .lumi-footer-container { max-width: 1024px; margin: 0 auto; }
+    .lumi-footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
+    .footer-col h3 { font-size: 14px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #fff; margin: 0 0 20px 0; }
+    .footer-col p, .footer-col a { font-size: 14px; color: #86868b; line-height: 1.6; margin: 0 0 12px 0; text-decoration: none; display: block; transition: color 0.3s ease; }
+    .footer-col a:hover { color: #FFD60A; }
+    .brand-desc { max-width: 300px; }
+    .contact-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px; }
+    .contact-item svg { width: 18px; height: 18px; flex-shrink: 0; color: #86868b; margin-top: 2px; }
+    .social-links { display: flex; gap: 16px; margin-top: 10px; }
+    .social-icon { width: 40px; height: 40px; border-radius: 50%; background: #2d2d2f; display: flex; align-items: center; justify-content: center; color: #fff; transition: all 0.3s ease; }
+    .social-icon:hover { background: #FFD60A; color: #1d1d1f; transform: translateY(-3px); }
+    .social-icon svg { width: 18px; height: 18px; }
+    .lumi-footer-bottom { border-top: 1px solid #333; padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .lumi-footer-bottom p { font-size: 12px; color: #86868b; margin: 0; }
+    @media (max-width: 768px) { .lumi-footer-grid { grid-template-columns: 1fr; gap: 40px; } .lumi-footer { padding: 60px 20px 30px; } .lumi-footer-bottom { flex-direction: column; text-align: center; } }
+</style>
+<footer class="lumi-footer">
+    <div class="lumi-footer-container">
+        <div class="lumi-footer-grid">
+            <div class="footer-col">
+                <h3 style="font-size: 18px; text-transform: none; letter-spacing: -0.5px;">LumiDesk.</h3>
+                <p class="brand-desc">Transforming the way you work and live. We design premium, minimalist workspace solutions for modern professionals and students.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Contact Us</h3>
+                <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><p style="margin:0;">TAR UMT Johor Branch<br>Jalan Segamat/Gemas<br>85000 Segamat, Johor<br>Malaysia</p></div>
+                <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg><p style="margin:0;">+60 11-5771 6982</p></div>
+            </div>
+            <div class="footer-col">
+                <h3>Follow Us</h3>
+                <p>Stay updated with our latest minimal setups and exclusive offers.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/weiren_0929?igsh=M2Foc3l4YWt5a2tl" target="_blank" class="social-icon" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                    <a href="https://www.facebook.com/share/1CcwJnQeoD/?mibextid=wwXIfr" target="_blank" class="social-icon" title="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                </div>
+            </div>
+        </div>
+        <div class="lumi-footer-bottom">
+            <p>&copy; 2026 LumiDesk Sdn Bhd. All rights reserved.</p>
+            <p>Designed for Focus.</p>
+        </div>
+    </div>
+</footer>
+
 <script>
     // --- iframe 防嵌修复 ---
     if (window.self !== window.top) { document.getElementById('mainBody').classList.add('embedded'); }
 
     // ============================================================
-    // ⚠️ NOHA 配置区：已更新为你最新的 Google Form 链接
+    // ⚠️ NOHA 配置区：你的最新 Google Form 链接
     // ============================================================
     const FORM_CONFIG = {
         baseUrl: "https://docs.google.com/forms/d/e/1FAIpQLSe9ni9r73kQ6tPgvUzL-3Fez0Twan5081k5qt0sKUy_HMhPTg/viewform",
         fields: {
-            orderId:    "entry.1569249656", // 对应 111 (Order ID)
-            items:      "entry.528642552",  // 对应 222 (Cart Items)
-            total:      "entry.421973586",  // 对应 333 (Total)
+            orderId:    "entry.1569249656", // Order ID
+            items:      "entry.528642552",  // Cart Items
+            total:      "entry.421973586",  // Total
         }
     };
 
-    // --- 折扣逻辑全局变量 ---
-    let currentDiscountInfo = null; // 存储当前激活的折扣信息
+    // --- 🚀 全局变量 (分离金额折扣与免邮) ---
+    let appliedDiscountInfo = null; // 用于存储金额类折扣 (lumidesk2026, hariraya, cny123)
+    let isFreeShipping = false;     // 用于存储是否免运费 (freeship)
     let calculatedSubtotal = 0;
+    let calculatedShipping = 5.90;  
     let calculatedDiscount = 0;
     let calculatedFinalTotal = 0;
 
@@ -191,7 +245,7 @@
             
             return `
                 <div class="cart-item">
-                    <img src="${imgSrc}" class="item-img">
+                    <img src="${imgSrc}" class="item-img" onerror="this.src='https://via.placeholder.com/150?text=LumiDesk'">
                     <div class="item-info">
                         <div class="item-name">${item.name}</div>
                         <div class="item-price">RM ${item.price.toFixed(2)} x ${item.qty}</div>
@@ -222,56 +276,93 @@
         }
     }
 
-    // --- 应用折扣码逻辑 ---
+    // --- 🚀 应用折扣码逻辑 (双通道叠加系统) ---
     function applyPromo() {
-        const input = document.getElementById('promoCode').value.trim().toLowerCase();
+        const inputBox = document.getElementById('promoCode');
+        const input = inputBox.value.trim().toLowerCase();
         const msg = document.getElementById('promoMsg');
 
-        // 初始化/清除状态
-        currentDiscountInfo = null;
-        msg.style.color = "var(--accent-red)";
-        
         if (input === '') {
-            msg.innerText = '';
-        } else if (input === 'lumidesk2026') {
-            currentDiscountInfo = { code: 'LUMIDESK2026', type: 'percent', val: 0.05 };
-            msg.style.color = "var(--accent-green)";
-            msg.innerText = '5% discount applied!';
-        } else if (input === 'hariraya') {
-            currentDiscountInfo = { code: 'HARIRAYA', type: 'fixed', val: 3.00 };
-            msg.style.color = "var(--accent-green)";
-            msg.innerText = 'RM 3.00 discount applied!';
-        } else if (input === 'cny123') {
-            currentDiscountInfo = { code: 'CNY123', type: 'fixed', val: 8.80 };
-            msg.style.color = "var(--accent-green)";
-            msg.innerText = 'RM 8.80 discount applied!';
-        } else {
+            // 如果留空并点击 Apply，清空所有优惠
+            appliedDiscountInfo = null;
+            isFreeShipping = false;
+            msg.style.color = "var(--text-muted)";
+            msg.innerText = 'All promo codes cleared. Enter blank to clear.';
+        } 
+        else if (input === 'freeship') {
+            isFreeShipping = true;
+            inputBox.value = ''; // 自动清空输入框，方便输入下一个
+            showActivePromos(msg);
+        } 
+        else if (input === 'lumidesk2026') {
+            appliedDiscountInfo = { code: 'LUMIDESK2026', type: 'percent', val: 0.05 };
+            inputBox.value = ''; 
+            showActivePromos(msg);
+        } 
+        else if (input === 'hariraya') {
+            appliedDiscountInfo = { code: 'HARIRAYA', type: 'fixed', val: 3.00 };
+            inputBox.value = ''; 
+            showActivePromos(msg);
+        } 
+        else if (input === 'cny123') {
+            appliedDiscountInfo = { code: 'CNY123', type: 'fixed', val: 8.80 };
+            inputBox.value = ''; 
+            showActivePromos(msg);
+        } 
+        else {
+            msg.style.color = "var(--accent-red)";
             msg.innerText = 'Invalid promo code.';
         }
         
         calculateTotals();
     }
 
+    // 更新界面上的活动折扣提示
+    function showActivePromos(msgElement) {
+        let activeTags = [];
+        if (appliedDiscountInfo) activeTags.push(appliedDiscountInfo.code);
+        if (isFreeShipping) activeTags.push('FREESHIP');
+        
+        msgElement.style.color = "var(--accent-green)";
+        msgElement.innerText = `Active Promos: ${activeTags.join(' + ')}`;
+    }
+
     // --- 计算总价与折扣 ---
     function calculateTotals() {
+        // 1. 计算运费 (如果激活了 freeship 就是 0)
+        calculatedShipping = isFreeShipping ? 0 : 5.90;
+        
+        // 2. 计算金额折扣
         calculatedDiscount = 0;
-
-        if (currentDiscountInfo) {
-            if (currentDiscountInfo.type === 'percent') {
-                calculatedDiscount = calculatedSubtotal * currentDiscountInfo.val;
-            } else if (currentDiscountInfo.type === 'fixed') {
-                calculatedDiscount = currentDiscountInfo.val;
+        if (appliedDiscountInfo) {
+            if (appliedDiscountInfo.type === 'percent') {
+                calculatedDiscount = calculatedSubtotal * appliedDiscountInfo.val;
+            } else if (appliedDiscountInfo.type === 'fixed') {
+                calculatedDiscount = appliedDiscountInfo.val;
             }
         }
 
-        calculatedFinalTotal = calculatedSubtotal - calculatedDiscount;
+        // 3. 最终价 = 商品总价 + 运费 - 折扣
+        calculatedFinalTotal = calculatedSubtotal + calculatedShipping - calculatedDiscount;
         if (calculatedFinalTotal < 0) calculatedFinalTotal = 0; // 防止倒扣钱
 
-        // 更新 UI 数字
+        // --- 更新 UI ---
         document.getElementById('subtotalAmount').innerText = calculatedSubtotal.toFixed(2);
-        document.getElementById('finalTotal').innerText = calculatedFinalTotal.toFixed(2);
         
-        // 显示或隐藏折扣行
+        // 运费 UI 变化
+        const shipRow = document.getElementById('shippingRow');
+        const shipAmt = document.getElementById('shippingAmount');
+        if (isFreeShipping) {
+            shipRow.style.color = "var(--accent-green)";
+            shipRow.style.fontWeight = "600";
+            shipAmt.innerText = "0.00 (Free)";
+        } else {
+            shipRow.style.color = "var(--text-muted)";
+            shipRow.style.fontWeight = "normal";
+            shipAmt.innerText = "5.90";
+        }
+
+        // 折扣 UI 变化
         const discRow = document.getElementById('discountRow');
         if (calculatedDiscount > 0) {
             document.getElementById('discountAmount').innerText = calculatedDiscount.toFixed(2);
@@ -279,6 +370,8 @@
         } else {
             discRow.style.display = 'none';
         }
+
+        document.getElementById('finalTotal').innerText = calculatedFinalTotal.toFixed(2);
     }
 
     // --- 🚀 提交到 Google Form ---
@@ -286,39 +379,40 @@
         const cart = JSON.parse(localStorage.getItem('lumi_cart') || '[]');
         if (cart.length === 0) return;
 
-        // 1. 生成订单号
+        // 生成订单号
         const dateStr = new Date().toISOString().slice(0,10).replace(/-/g, "");
         const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
         const orderId = `LD-${dateStr}-${randomSuffix}`;
-        
         const finalTotalString = calculatedFinalTotal.toFixed(2);
 
-        // 2. 组装发给 Google Form 的明细 (包含折扣信息)
+        // 组装发给 Google Form 的明细
         let cartString = cart.map(i => `${i.name} (x${i.qty}) = RM ${(i.price * i.qty).toFixed(2)}`).join("\n"); 
         
-        // 🚨 如果有折扣，追加说明到 Form 里，这样后台能清晰看到减了多少钱
-        if (calculatedDiscount > 0) {
-            cartString += `\n\nSubtotal: RM ${calculatedSubtotal.toFixed(2)}`;
-            cartString += `\nDiscount (${currentDiscountInfo.code}): -RM ${calculatedDiscount.toFixed(2)}`;
-            cartString += `\n---`;
+        cartString += `\n\n---`;
+        cartString += `\nSubtotal: RM ${calculatedSubtotal.toFixed(2)}`;
+        cartString += `\nShipping: RM ${calculatedShipping.toFixed(2)}` + (isFreeShipping ? " (FREESHIP Applied)" : "");
+        
+        if (calculatedDiscount > 0 && appliedDiscountInfo) {
+            cartString += `\nDiscount (${appliedDiscountInfo.code}): -RM ${calculatedDiscount.toFixed(2)}`;
         }
 
-        // 3. 缓存给 Receipt 页用
+        // 缓存给 Receipt 页用
         localStorage.setItem('lumi_last_order', JSON.stringify({
             id: orderId, total: finalTotalString, subtotal: calculatedSubtotal.toFixed(2), 
-            discount: calculatedDiscount.toFixed(2), items: cart, date: new Date().toLocaleString()
+            shipping: calculatedShipping.toFixed(2), discount: calculatedDiscount.toFixed(2), 
+            items: cart, date: new Date().toLocaleString()
         }));
 
-        // 4. 拼接 Google Form 链接
+        // 拼接 Google Form 链接
         const params = new URLSearchParams();
         params.append("embedded", "true"); 
         params.append(FORM_CONFIG.fields.orderId, orderId);
         params.append(FORM_CONFIG.fields.items, cartString);
-        params.append(FORM_CONFIG.fields.total, finalTotalString); // 发送打折后的最终价
+        params.append(FORM_CONFIG.fields.total, finalTotalString); 
 
         const finalUrl = `${FORM_CONFIG.baseUrl}?${params.toString()}`;
 
-        // 5. 加载弹窗
+        // 加载弹窗
         document.getElementById('formFrame').src = finalUrl;
         document.getElementById('checkoutModal').classList.add('active');
     }
@@ -327,22 +421,19 @@
         document.getElementById('checkoutModal').classList.remove('active');
     }
 
-    // --- 完成订单 ---
     function finishTransaction() {
-        localStorage.removeItem('lumi_cart'); // 清空购物车
+        localStorage.removeItem('lumi_cart'); 
         loadCart();
         closeModal();
         try { window.top.location.href = 'receipt.html'; } 
         catch (e) { window.location.href = 'receipt.html'; }
     }
 
-    // --- 退出页面 ---
     function goBack() {
         try { window.top.location.href = 'index.html'; } 
         catch (e) { window.location.href = 'index.html'; }
     }
 
-    // 初始化
     loadCart();
 </script>
 

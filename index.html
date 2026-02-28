@@ -6,12 +6,13 @@
     <title>LumiDesk | Minimalism redefined</title>
     <style>
         /* =========================================
-           🌟 全局基础设置
+           🌟 全局基础设置 (Apple Style)
            ========================================= */
         :root {
             --bg: #ffffff;
             --text: #1d1d1f;
             --text-muted: #86868b;
+            --bg-secondary: #f5f5f7;
             --accent-yellow: #FFD60A; 
             --accent-orange: #f39c12; 
             --glass: rgba(255, 255, 255, 0.72);
@@ -36,18 +37,12 @@
             background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-
         .nav-content {
             max-width: 1024px; margin: 0 auto; height: 100%;
             display: flex; align-items: center; justify-content: space-between; padding: 0 22px;
             position: relative;
         }
-
-        /* 菜单绝对居中 */
-        .nav-menu { 
-            display: flex; gap: 34px; 
-            position: absolute; left: 50%; transform: translateX(-50%); 
-        }
+        .nav-menu { display: flex; gap: 34px; position: absolute; left: 50%; transform: translateX(-50%); }
         .nav-menu a {
             font-size: 13px; font-weight: 500; letter-spacing: .02em;
             text-decoration: none; color: var(--text); opacity: 0.8; transition: opacity 0.3s ease;
@@ -69,7 +64,6 @@
             min-height: 100vh; display: flex; flex-direction: column; align-items: center; text-align: center; 
             padding: 140px 20px 60px; transition: padding 0.5s ease, min-height 0.5s ease;
         }
-        /* Google Sites iframe 修复 */
         body.embedded .hero { min-height: auto; padding: 92px 20px 40px; }
 
         .hero-title {
@@ -103,51 +97,50 @@
         .feature-card p { font-size: 14px; color: var(--text-muted); margin: 0; line-height: 1.5; }
 
         /* =========================================
-           3. Promo Carousel
+           3. Promo Carousel 
            ========================================= */
         .promo-section { max-width: 1100px; margin: 60px auto 100px; padding: 0 24px; position: relative; }
         .carousel-viewport { 
             width: 100%; aspect-ratio: 21/9; border-radius: var(--radius-lg); 
-            overflow: hidden; position: relative; background: #f5f5f7;
+            overflow: hidden; position: relative; background: var(--bg-secondary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
         .carousel-track { display: flex; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1); }
         .slide { 
-            min-width: 100%; height: 100%; position: relative; 
-            display: flex; align-items: center; padding: 0 60px; color: white;
+            min-width: 100%; height: 100%; position: relative; cursor: pointer;
         }
-        .slide-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
-        .slide-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(90deg, rgba(0,0,0,0.5) 0%, transparent 70%); z-index: 1; }
-        .slide-content { position: relative; z-index: 2; max-width: 400px; }
-        .slide-content h2 { font-size: 32px; margin: 0 0 10px; }
-        .slide-content p { font-size: 16px; opacity: 0.9; margin: 0 0 24px; }
+        .slide-img { width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform 0.5s ease; }
+        .slide:hover .slide-img { transform: scale(1.02); }
         
         .carousel-btn {
             position: absolute; top: 50%; transform: translateY(-50%);
-            width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px); border: none; color: white; cursor: pointer; z-index: 10;
-            transition: var(--transition); display: flex; align-items: center; justify-content: center;
+            width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.4); color: var(--text); 
+            cursor: pointer; z-index: 10; transition: var(--transition); display: flex; align-items: center; justify-content: center; font-weight: bold;
         }
+        .carousel-btn:hover { background: #fff; transform: translateY(-50%) scale(1.1); }
         .btn-prev { left: 20px; }
         .btn-next { right: 20px; }
         .indicators { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
         .dot { width: 6px; height: 6px; border-radius: 50%; background: #d2d2d7; transition: 0.3s; cursor: pointer; }
-        .dot.active { width: 20px; border-radius: 3px; background: var(--text); }
+        .dot.active { width: 24px; border-radius: 3px; background: var(--text); }
 
         /* =========================================
-           4. Inspiration Masonry
+           4. Inspiration Grid (🚀 专为你 4 张宽图定制的布局)
            ========================================= */
         .inspiration-section { margin: var(--section-spacing) auto; }
-        .masonry-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 250px); gap: 16px;
+        .inspiration-grid { 
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; 
         }
-        .masonry-item { position: relative; overflow: hidden; border-radius: 16px; background: #f5f5f7; }
-        .masonry-img {
-            width: 100%; height: 100%; background-size: cover; background-position: center;
-            transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+        .ins-item { 
+            position: relative; border-radius: 20px; overflow: hidden; 
+            background: #f5f5f7; aspect-ratio: 16/9; /* 强制 16:9 完美宽幅比例 */
         }
-        .masonry-item:hover .masonry-img { transform: scale(1.05); }
-        .item-large { grid-column: span 2; grid-row: span 2; }
-        .item-wide { grid-column: span 2; }
+        .ins-img { 
+            width: 100%; height: 100%; background-size: cover; background-position: center; 
+            transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); 
+        }
+        .ins-item:hover .ins-img { transform: scale(1.05); }
 
         /* =========================================
            5. New Arrivals
@@ -158,69 +151,37 @@
         .view-all:hover { color: var(--accent-orange); }
 
         .product-scroll {
-            display: flex; gap: 20px; padding: 10px 5px;
-            overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-            justify-content: center;
+            display: flex; gap: 20px; padding: 10px 5px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; justify-content: center;
         }
         .product-scroll::-webkit-scrollbar { display: none; }
 
         .prod-item {
-            background: white; border-radius: 20px; padding: 12px;
-            flex: 0 0 240px; height: 360px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            transition: all 0.4s; scroll-snap-align: center;
-            display: flex; flex-direction: column; color: inherit; position: relative; cursor: pointer;
+            background: white; border-radius: 20px; padding: 12px; flex: 0 0 240px; height: 360px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: all 0.4s; scroll-snap-align: center;
+            display: flex; flex-direction: column; color: inherit; position: relative; cursor: pointer; border: 1px solid rgba(0,0,0,0.02);
         }
         .prod-item:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
 
-        .img-container {
-            height: 200px; width: 100%; border-radius: 14px; overflow: hidden;
-            margin-bottom: 12px; background-color: #faf9f6; position: relative;
-        }
-        .prod-img {
-            width: 100%; height: 100%; background-size: cover; background-position: center;
-            transition: transform 0.6s; mix-blend-mode: multiply;
-        }
+        .img-container { height: 200px; width: 100%; border-radius: 14px; overflow: hidden; margin-bottom: 12px; background-color: var(--bg-secondary); position: relative; }
+        .prod-img { width: 100%; height: 100%; background-size: cover; background-position: center; transition: transform 0.6s; mix-blend-mode: multiply; }
         .prod-item:hover .prod-img { transform: scale(1.08); }
 
         .prod-title { font-size: 16px; font-weight: 600; margin: 0 0 4px 0; color: #1d1d1f; }
         .prod-price { font-size: 14px; color: #666; }
         .prod-cat { font-size: 11px; color: #999; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .buy-btn-small {
-            margin-top: auto; background: #f5f5f7; color: #1d1d1f;
-            text-align: center; padding: 10px; border-radius: 30px;
-            font-size: 12px; font-weight: 600; transition: 0.3s;
-        }
+        .buy-btn-small { margin-top: auto; background: #f5f5f7; color: #1d1d1f; text-align: center; padding: 10px; border-radius: 30px; font-size: 12px; font-weight: 600; transition: 0.3s; }
         .prod-item:hover .buy-btn-small { background: #1d1d1f; color: white; }
-        .glass-tag {
-            position: absolute; top: 10px; left: 10px; padding: 4px 10px;
-            border-radius: 20px; background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(5px); font-size: 9px; font-weight: 800;
-            border: 1px solid rgba(255,255,255,0.5); z-index: 2;
-        }
+        .glass-tag { position: absolute; top: 10px; left: 10px; padding: 4px 10px; border-radius: 20px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px); font-size: 9px; font-weight: 800; border: 1px solid rgba(255,255,255,0.5); z-index: 2; }
 
-        /* Footer */
-        .full-width-banner {
-            width: 100%; height: 400px; margin: var(--section-spacing) 0;
-            background-color: #ddd; background-size: cover; background-position: center;
-        }
-        .newsletter-section {
-            background-color: #ed8a6b; padding: 60px 20px;
-            text-align: center; color: white;
-        }
-        .news-input { padding: 14px 24px; border-radius: 50px; border: 2px solid rgba(255,255,255,0.4); background: transparent; color: white; outline: none; }
-        .news-btn { padding: 14px 30px; border-radius: 50px; border: none; background: #2c3e50; color: white; font-weight: 600; cursor: pointer; transition: 0.3s; }
-        .news-btn:hover { background: #1a252f; transform: scale(1.05); }
-
+        /* 🚀 全宽横幅 (专门给你的第5张图准备的) */
+        .full-width-banner { width: 100%; height: 400px; margin: var(--section-spacing) 0; background-color: #f5f5f7; background-size: cover; background-position: center; }
+        
         @media (max-width: 768px) {
             .nav-menu { display: none; }
             .feature-grid { grid-template-columns: 1fr; }
             .carousel-viewport { aspect-ratio: 16/10; }
-            .slide { padding: 0 30px; }
-            .masonry-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 200px); }
-            .item-large { grid-column: span 2; grid-row: span 2; }
-            .item-wide { grid-column: span 2; }
+            .inspiration-grid { grid-template-columns: 1fr; } /* 手机上单列显示，图依然是宽的 */
             .product-scroll { justify-content: flex-start; padding-left: 20px; }
             .full-width-banner { height: 250px; }
         }
@@ -285,24 +246,18 @@
 
 <div class="container-centered inspiration-section">
     <h2 class="section-title-large">More ideas and inspiration</h2>
-    <div class="masonry-grid">
-        <div class="masonry-item item-large">
-            <div class="masonry-img" style="background-image: url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=800');"></div>
+    <div class="inspiration-grid">
+        <div class="ins-item">
+            <div class="ins-img" style="background-image: url('images/ins1.jpg');"></div>
         </div>
-        <div class="masonry-item">
-            <div class="masonry-img" style="background-image: url('https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?q=80&w=400');"></div>
+        <div class="ins-item">
+            <div class="ins-img" style="background-image: url('images/ins2.jpg');"></div>
         </div>
-        <div class="masonry-item">
-            <div class="masonry-img" style="background-image: url('https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=400');"></div>
+        <div class="ins-item">
+            <div class="ins-img" style="background-image: url('images/ins3.jpg');"></div>
         </div>
-        <div class="masonry-item item-wide">
-            <div class="masonry-img" style="background-image: url('https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=600');"></div>
-        </div>
-        <div class="masonry-item">
-            <div class="masonry-img" style="background-image: url('https://images.unsplash.com/photo-1595515106969-1ce29569ff95?q=80&w=400');"></div>
-        </div>
-        <div class="masonry-item">
-            <div class="masonry-img" style="background-image: url('https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=400');"></div>
+        <div class="ins-item">
+            <div class="ins-img" style="background-image: url('images/ins4.jpg');"></div>
         </div>
     </div>
 </div>
@@ -317,62 +272,98 @@
         <div class="prod-item" onclick="goShopAdd('ls1')">
             <div class="glass-tag">NEW</div>
             <div class="img-container">
-                <div class="prod-img" style="background-image: url('https://images.unsplash.com/photo-1587614382346-4ec70e388b28?q=80&w=400');"></div>
+                <div class="prod-img" style="background-image: url('images/a1.jpg');"></div>
             </div>
             <div class="prod-cat">Laptop Stands</div>
             <h3 class="prod-title">AluStand Pro</h3>
-            <div class="prod-price">RM 129 </div>
+            <div class="prod-price">RM 129.00 </div>
             <div class="buy-btn-small">Go to Shop</div>
         </div>
         <div class="prod-item" onclick="goShopAdd('dl1')">
             <div class="glass-tag">HOT</div>
             <div class="img-container">
-                <div class="prod-img" style="background-image: url('https://images.unsplash.com/photo-1534234828569-16d1d2d3e915?q=80&w=400');"></div>
+                <div class="prod-img" style="background-image: url('images/b1.jpg');"></div>
             </div>
             <div class="prod-cat">Desk Lamps</div>
             <h3 class="prod-title">GlowBar Pro</h3>
-            <div class="prod-price">RM 159 </div>
+            <div class="prod-price">RM 159.00 </div>
             <div class="buy-btn-small">Go to Shop</div>
         </div>
         <div class="prod-item" onclick="goShopAdd('st1')">
             <div class="img-container">
-                <div class="prod-img" style="background-image: url('https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?q=80&w=400');"></div>
+                <div class="prod-img" style="background-image: url('images/d1.jpg');"></div>
             </div>
             <div class="prod-cat">Storage</div>
             <h3 class="prod-title">Zen Tray</h3>
-            <div class="prod-price">RM 65 </div>
+            <div class="prod-price">RM 65.00 </div>
             <div class="buy-btn-small">Go to Shop</div>
         </div>
-        <div class="prod-item" onclick="goShopAdd('co1')">
+        <div class="prod-item" onclick="goShopAdd('co2')">
             <div class="glass-tag">NEW</div>
             <div class="img-container">
-                <div class="prod-img" style="background-image: url('https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=400');"></div>
+                <div class="prod-img" style="background-image: url('images/c2.jpg');"></div>
             </div>
             <div class="prod-cat">Organizers</div>
             <h3 class="prod-title">MagClip Box</h3>
-            <div class="prod-price">RM 35 </div>
+            <div class="prod-price">RM 15.00 </div>
             <div class="buy-btn-small">Go to Shop</div>
         </div>
     </div>
 </div>
 
-<div class="full-width-banner" style="background-image: url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1600');"></div>
+<div class="full-width-banner" style="background-image: url('images/banner-bg.jpg');"></div>
 
-<div class="newsletter-section">
-    <h2 style="font-size:24px; margin-bottom:20px;">Be the first to know our latest deals!</h2>
-    <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-        <input type="text" class="news-input" placeholder="Enter your email">
-        <button class="news-btn">Subscribe</button>
+<style>
+    .lumi-footer { background-color: #1d1d1f; color: #f5f5f7; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; padding: 80px 20px 40px; border-top: 1px solid #333; }
+    .lumi-footer-container { max-width: 1024px; margin: 0 auto; }
+    .lumi-footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
+    .footer-col h3 { font-size: 14px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #fff; margin: 0 0 20px 0; }
+    .footer-col p, .footer-col a { font-size: 14px; color: #86868b; line-height: 1.6; margin: 0 0 12px 0; text-decoration: none; display: block; transition: color 0.3s ease; }
+    .footer-col a:hover { color: #FFD60A; }
+    .brand-desc { max-width: 300px; }
+    .contact-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px; }
+    .contact-item svg { width: 18px; height: 18px; flex-shrink: 0; color: #86868b; margin-top: 2px; }
+    .social-links { display: flex; gap: 16px; margin-top: 10px; }
+    .social-icon { width: 40px; height: 40px; border-radius: 50%; background: #2d2d2f; display: flex; align-items: center; justify-content: center; color: #fff; transition: all 0.3s ease; }
+    .social-icon:hover { background: #FFD60A; color: #1d1d1f; transform: translateY(-3px); }
+    .social-icon svg { width: 18px; height: 18px; }
+    .lumi-footer-bottom { border-top: 1px solid #333; padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .lumi-footer-bottom p { font-size: 12px; color: #86868b; margin: 0; }
+    @media (max-width: 768px) { .lumi-footer-grid { grid-template-columns: 1fr; gap: 40px; } .lumi-footer { padding: 60px 20px 30px; } .lumi-footer-bottom { flex-direction: column; text-align: center; } }
+</style>
+<footer class="lumi-footer">
+    <div class="lumi-footer-container">
+        <div class="lumi-footer-grid">
+            <div class="footer-col">
+                <h3 style="font-size: 18px; text-transform: none; letter-spacing: -0.5px;">LumiDesk.</h3>
+                <p class="brand-desc">Transforming the way you work and live. We design premium, minimalist workspace solutions for modern professionals and students.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Contact Us</h3>
+                <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><p style="margin:0;">TAR UMT Johor Branch<br>Jalan Segamat/Gemas<br>85000 Segamat, Johor<br>Malaysia</p></div>
+                <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg><p style="margin:0;">+60 11-5771 6982</p></div>
+            </div>
+            <div class="footer-col">
+                <h3>Follow Us</h3>
+                <p>Stay updated with our latest minimal setups and exclusive offers.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/weiren_0929?igsh=M2Foc3l4YWt5a2tl" target="_blank" class="social-icon" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                    <a href="https://www.facebook.com/share/1CcwJnQeoD/?mibextid=wwXIfr" target="_blank" class="social-icon" title="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                </div>
+            </div>
+        </div>
+        <div class="lumi-footer-bottom">
+            <p>&copy; 2026 LumiDesk Sdn Bhd. All rights reserved.</p>
+            <p>Designed for Focus.</p>
+        </div>
     </div>
-</div>
+</footer>
 
 <script>
-    // --- Noha: Detect if embedded in Google Sites iframe ---
     if (window.self !== window.top) {
         document.getElementById('mainBody').classList.add('embedded');
     }
 
-    // --- Noha: URL Configuration Center ---
     const URLS = {
         HOME: 'index.html',
         PRODUCTS: 'shop.html',
@@ -382,20 +373,15 @@
         KEFU: 'kefu.html'
     };
 
-    // --- Robust Navigation Function (Google Sites Safe) ---
     function go(url) {
         try { window.top.location.href = url; }
         catch (e) { window.location.href = url; }
     }
 
-    // --- New Arrivals Redirection (Pass ID to Shop) ---
     function goShopAdd(productId) {
-        // Noha: Simply redirect to shop with ID parameter. 
-        // Logic to actually add to cart will be in shop.html later.
         go(`shop.html?add=${encodeURIComponent(productId)}`);
     }
 
-    // --- Event Listeners ---
     document.getElementById('navHome').onclick = (e) => { e.preventDefault(); go(URLS.HOME); };
     document.getElementById('navProducts').onclick = (e) => { e.preventDefault(); go(URLS.PRODUCTS); };
     document.getElementById('navAbout').onclick = (e) => { e.preventDefault(); go(URLS.ABOUT); };
@@ -407,15 +393,17 @@
     document.getElementById('kefuBtn').onclick = () => go(URLS.KEFU);
     document.getElementById('bagBtn').onclick  = () => go(URLS.BAG);
 
-    // --- Carousel Data ---
+    // ============================================================
+    // 🚀 NOHA: 轮播图图片设定
+    // 整个图片都可以点击直接跳转到 Shop！
+    // ============================================================
     const PROMOS = [
-        { title: "Winter Collection", subtitle: "Up to 20% off on premium walnut stands.", img: "https://picsum.photos/seed/promo1/1200/600" },
-        { title: "New Year, New Desk", subtitle: "The limited Matte Black series is here.", img: "https://picsum.photos/seed/promo2/1200/600" },
-        { title: "Bundle & Save", subtitle: "Save $50 when you buy the full setup.", img: "https://picsum.photos/seed/promo3/1200/600" },
-        { title: "Organize Better", subtitle: "Discover our new artisan cable organizers.", img: "https://picsum.photos/seed/promo4/1200/600" }
+        { img: "images/1bb.png" },
+        { img: "images/2bb.png" },
+        { img: "images/3bb.png" },
+        { img: "images/4bb.png" }
     ];
 
-    // --- Carousel Logic ---
     const track = document.getElementById('track');
     const indicatorWrap = document.getElementById('indicators');
     let currentSlide = 0;
@@ -424,23 +412,18 @@
         PROMOS.forEach((promo, idx) => {
             const slide = document.createElement('div');
             slide.className = 'slide';
+            slide.onclick = () => go(URLS.PRODUCTS);
             slide.innerHTML = `
-                <img src="${promo.img}" class="slide-img" alt="Promo">
-                <div class="slide-overlay"></div>
-                <div class="slide-content">
-                    <h2>${promo.title}</h2>
-                    <p>${promo.subtitle}</p>
-                    <a href="#" class="cta-btn" style="padding:10px 24px; font-size:13px;" onclick="event.preventDefault(); go(URLS.PRODUCTS);">Explore Now</a>
-                </div>
+                <img src="${promo.img}" class="slide-img" alt="Promo Banner" onerror="this.src='https://via.placeholder.com/1200x600?text=Banner+Not+Found'">
             `;
             track.appendChild(slide);
+            
             const dot = document.createElement('div');
             dot.className = `dot ${idx === 0 ? 'active' : ''}`;
             dot.onclick = () => goToSlide(idx);
             indicatorWrap.appendChild(dot);
         });
         
-        // Noha: Force go to slide 0 to prevent flicker
         goToSlide(0);
     }
 
@@ -455,10 +438,9 @@
         goToSlide(currentSlide);
     }
 
-    setInterval(() => moveSlide(1), 6000); 
+    setInterval(() => moveSlide(1), 5000); 
     initCarousel();
 
-    // --- Cart Count ---
     const cart = JSON.parse(localStorage.getItem('lumi_cart') || '[]');
     document.getElementById('cartCount').innerText = cart.reduce((s, i) => s + i.qty, 0);
 </script>
